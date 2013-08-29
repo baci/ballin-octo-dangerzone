@@ -1,4 +1,0 @@
-map consists of list of tiles with following information: x:y
-
-TileID (pos. in tileset)
-TypeID (None, Normal, Block)

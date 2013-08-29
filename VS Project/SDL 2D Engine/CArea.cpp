@@ -95,7 +95,8 @@ CTile* CArea::GetTile(int x, int y)
 	int ID = x / TILE_SIZE;
 	ID = ID + (areaSizeX * (y / TILE_SIZE));
 
-	if(ID < 0 || ID >= tileList.size()) return NULL;
+	if(ID < 0 || ID >= tileList.size()) 
+		return NULL;
 
 	return &tileList[ID];
 }

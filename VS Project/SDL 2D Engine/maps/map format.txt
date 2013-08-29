@@ -1,9 +1,7 @@
 area consists of:
 tileset path
-amount of maps (both directions)
-list of map paths
+width height
+tiles with following information: x:y
 
-map consists of list of tiles with following information: x:y
-
-TileID (pos. in tileset)
-TypeID (None, Normal, Block)
+x=TileID (pos. in tileset)
+y=TypeID (None, Normal, Block)

@@ -41,13 +41,17 @@ CEntity::~CEntity()
 
 bool CEntity::OnLoad(char* file, int width, int height, int maxFrames)
 {
-	if((surfEntity = CSurface::OnLoad(file)) == NULL)
+	std::string fs = file;
+	std::string path = "./charsets/";
+	std::string filepath = path + fs;
+	if((surfEntity = CSurface::OnLoad(const_cast<char*>(filepath.c_str()))) == NULL)
 		return false;
 
 	CSurface::Transparent(surfEntity, 255, 0, 255, false);
 
 	this->width = width;
 	this->height = height;
+	this->framesAmount = maxFrames;
 	
 	animControl.maxFrames = maxFrames;
 
@@ -85,7 +89,7 @@ void CEntity::OnRender(SDL_Surface* surfDisplay)
 	if(surfEntity == NULL || surfDisplay == NULL) return;
 
 	CSurface::OnDraw(surfDisplay, surfEntity, x - CCamera::CameraControl.GetX(), y - CCamera::CameraControl.GetY(), 
-		currentFrameCol*width, (currentFrameRow + animControl.GetCurrentFrame())*height, width, height);
+		(currentFrameCol + animControl.GetCurrentFrame())*width, currentFrameRow*height, width, height);
 }
 
 void CEntity::OnCleanup()
@@ -99,11 +103,12 @@ void CEntity::OnCleanup()
 void CEntity::OnAnimate()
 {
 	if(moveLeft)
-		currentFrameCol = 0;
+		currentFrameRow = 1;
 	else if(moveRight)
-		currentFrameCol = 1;
+		currentFrameRow = 2;
 
-	animControl.OnAnimate();
+	if(canJump)
+		animControl.OnAnimate();
 }
 
 bool CEntity::OnCollision(CEntity* entity)
@@ -169,11 +174,12 @@ void CEntity::OnMove(float moveX, float moveY)
 		moveY += -newY;
 
 		if(newX > 0 && moveX <= 0) newX = 0;
-		if(newX < 0 && moveX >= 0) newX = 0;
+		else if(newX < 0 && moveX >= 0) newX = 0;
+		else if(moveX == 0) newX = 0;
+		
 		if(newY > 0 && moveY <= 0) newY = 0;
-		if(newY < 0 && moveY >= 0) newY = 0;
-		if(moveX == 0) newX = 0;
-		if(moveY == 0) newY = 0;
+		else if(newY < 0 && moveY >= 0) newY = 0;
+		else if(moveY == 0) newY = 0;
 
 		if(moveX == 0 && moveY == 0)	break;
 		if(newX == 0 && newY == 0)		break;
@@ -217,9 +223,9 @@ bool CEntity::Collides(int oX, int oY, int oW, int oH)
 	// if all of the sides of the first object are out of range of the second object,
 	// there is no collision.
 	if(bottom1 < top2) return false;
-	if(top1 > bottom2) return false;
-	if(right1 < left2) return false;
-	if(left1 > right2) return false;
+	else if(top1 > bottom2) return false;
+	else if(right1 < left2) return false;
+	else if(left1 > right2) return false;
 
 	return true;
 }
@@ -272,7 +278,7 @@ bool CEntity::PosValidEntity(CEntity* entity, int newX, int newY)
 {
 	if(this != entity && entity != NULL && entity->dead == false &&
 		entity->flags ^ ENTITY_FLAG_MAPONLY &&
-		entity->Collides(newX + colX, newY + colY, width - colWidth - 1, height - colHeight - 1) == true)
+		entity->Collides(newX + colX, newY + colY, width - colWidth, height - colHeight) == true)
 	{
 		CEntityCol entityCol;
 		entityCol.entityA = this;

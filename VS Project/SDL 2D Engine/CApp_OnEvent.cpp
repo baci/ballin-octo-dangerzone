@@ -17,6 +17,8 @@ void CApp::OnJoyButtonDown(Uint8 which, Uint8 button)
 	case 0:
 		player.Jump();
 		break;
+	case 7:
+		OnExit();
 	default:
 		break;
 	}

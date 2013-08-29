@@ -13,7 +13,10 @@ bool CApp::OnInit()
 	// set up joystick if found
 	printf("%i joysticks were found.\n\n", SDL_NumJoysticks() );
     SDL_JoystickEventState(SDL_ENABLE);
-    joystick = SDL_JoystickOpen(0); // open first joystick
+    if(SDL_NumJoysticks()>0)
+		joystick = SDL_JoystickOpen(0); // open first joystick
+	else
+		joystick = NULL;
 
 	if((surfBackground = CSurface::OnLoad("whiteBackground.bmp")) == NULL)
 		return false;
@@ -23,15 +26,16 @@ bool CApp::OnInit()
 
 	SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);
 
-    if(player.OnLoad("./yoshi.png", 64, 64, 8) == false)
+    if(player.OnLoad("yoshi.png", 64, 64, 8) == false)
 		return false;
-	if(player2.OnLoad("./yoshi.png", 64, 64, 8) == false)
+	if(enemy.OnLoad("bowsern.png", 64, 64, 4) == false)
 		return false;
 
-	player2.x = 100;
+	enemy.x = 300;
+	enemy.y = 160;
 
 	CEntity::EntityList.push_back(&player);
-	CEntity::EntityList.push_back(&player2);
+	CEntity::EntityList.push_back(&enemy);
 
 	CCamera::CameraControl.targetMode = TARGET_MODE_CENTER;
 	CCamera::CameraControl.SetTarget(&player.x, &player.y);

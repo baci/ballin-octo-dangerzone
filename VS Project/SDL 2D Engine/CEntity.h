@@ -2,6 +2,7 @@
     #define _CENTITY_H_
 
 #include <vector>
+#include <string>
 
 #include "CArea.h"
 #include "CAnimation.h"
@@ -30,7 +31,7 @@ class CEntity {
 public:
 	static std::vector<CEntity*>	EntityList; // list of all existing entities
 
-	// entity bounds
+	// entity bounds (pos. in world)
 	float	x;
 	float	y;
 	int		width;
@@ -62,6 +63,7 @@ protected:
 	// sprite animation state
 	int		currentFrameCol;
 	int		currentFrameRow;
+	int		framesAmount;
 
 	// collision offset values
 	int		colX;
@@ -100,7 +102,7 @@ public:
 
 	bool Jump();
 
-private:
+protected:
 	/**
 	checks if the tile the entity is trying to move to is valid.
 	*/

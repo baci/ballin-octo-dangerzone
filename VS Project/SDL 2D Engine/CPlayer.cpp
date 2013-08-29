@@ -26,7 +26,7 @@ void CPlayer::OnCleanup() {
 void CPlayer::OnAnimate()
 {
 	if(speedX != 0) {
-        animControl.maxFrames = 8;
+        animControl.maxFrames = framesAmount;
     }else{
         animControl.maxFrames = 0;
     }
@@ -36,6 +36,6 @@ void CPlayer::OnAnimate()
  
 bool CPlayer::OnCollision(CEntity* Entity) 
 {
-	Jump();
+	//Jump();
 	return true;
 }

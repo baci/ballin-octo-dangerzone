@@ -19,7 +19,7 @@ void CAnimation::OnAnimate()
 	if(oldTime + frameRate > SDL_GetTicks())
 		return;
 
-	unsigned short frameCounter = (SDL_GetTicks() - oldTime)/frameRate;
+	unsigned long frameCounter = (SDL_GetTicks() - oldTime)/frameRate;
 
 	oldTime = SDL_GetTicks();
 

@@ -18,6 +18,7 @@ Author: Till Riemer
 #include "CArea.h"
 #include "CCamera.h"
 #include "CPlayer.h"
+#include "CEnemy.h"
 
 class CApp : public CEvent {
 
@@ -29,7 +30,7 @@ private:
 	SDL_Surface*	surfBackground;
 
 	CPlayer player;
-	CPlayer player2;
+	CEnemy enemy;
 
 	SDL_Joystick *joystick;
 

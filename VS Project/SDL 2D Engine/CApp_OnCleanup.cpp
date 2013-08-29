@@ -17,7 +17,11 @@ void CApp::OnCleanup()
 	SDL_FreeSurface(surfBackground);
 
 	// close joystick handler
-	SDL_JoystickClose(joystick);
+	if(joystick != NULL)
+	{
+		SDL_JoystickClose(joystick);
+		SDL_JoystickEventState(SDL_DISABLE);
+	}
 
     SDL_Quit();
 }

@@ -76,6 +76,7 @@
     <ClCompile Include="CApp_OnRender.cpp" />
     <ClCompile Include="CArea.cpp" />
     <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CEnemy.cpp" />
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CEntityCol.cpp" />
     <ClCompile Include="CEvent.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CArea.h" />
     <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CEnemy.h" />
     <ClInclude Include="CEntity.h" />
     <ClInclude Include="CEvent.h" />
     <ClInclude Include="CFPS.h" />
