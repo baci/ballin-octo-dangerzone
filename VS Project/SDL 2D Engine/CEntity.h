@@ -6,7 +6,6 @@
 
 #include "CArea.h"
 #include "CAnimation.h"
-#include "CCamera.h"
 #include "CFPS.h"
 #include "CSurface.h"
 
@@ -23,6 +22,8 @@ enum
 	ENTITY_FLAG_GHOST = 0x00000002,		// entity can walk through walls
 	ENTITY_FLAG_MAPONLY = 0x00000004	// entity only collides with map (not with other entities)
 };
+
+class CCamera;
 
 /**
 	An entity which can be moved / animated. (everything besides solid map objects)

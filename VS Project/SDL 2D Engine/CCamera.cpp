@@ -1,12 +1,14 @@
 #include "CCamera.h"
+#include "CEntity.h"
 
 CCamera CCamera::CameraControl;
 
 CCamera::CCamera()
 {
 	x = y = 0;
-	targetX = targetY = NULL;
-	targetMode = TARGET_MODE_NORMAL;
+	target = NULL;
+	targetMode = TARGET_MODE_FOLLOW;
+	followThreshold = 0.8f;
 }
 
 void CCamera::OnMove(int moveX, int moveY)
@@ -17,12 +19,20 @@ void CCamera::OnMove(int moveX, int moveY)
 
 int CCamera::GetX()
 {
-	if(targetX != NULL)
+	if(target != NULL)
 	{
 		if(targetMode == TARGET_MODE_CENTER)
-			return *targetX - (WWIDTH / 2);
+			return (this->target->x - (WWIDTH / 2));
+		else if(targetMode == TARGET_MODE_FOLLOW)
+		{
+			if(this->target->x > (x + (WWIDTH * followThreshold)))
+				x++;
+			else if(this->target->x < (x + (WWIDTH * (1-followThreshold))))
+				x--;
+			return x;
+		}
 
-		return *targetX;
+		return this->target->x;
 	}
 	
 	return x;
@@ -30,12 +40,20 @@ int CCamera::GetX()
 
 int CCamera::GetY()
 {
-	if(targetY != NULL)
+	if(target != NULL)
 	{
 		if(targetMode == TARGET_MODE_CENTER)
-			return *targetY - (WHEIGHT / 2);
+			return (this->target->y - (WHEIGHT / 2));
+		else if(targetMode == TARGET_MODE_FOLLOW)
+		{
+			if(this->target->y > (y + (WHEIGHT * followThreshold)))
+				y++;
+			else if(this->target->y < (y + (WHEIGHT * (1-followThreshold))))
+				y--;
+			return y;
+		}
 
-		return *targetY;
+		return this->target->y;
 	}
 	
 	return y;
@@ -47,8 +65,7 @@ void CCamera::SetPos(int x, int y)
 	this->y = y;
 }
 
-void CCamera::SetTarget(float* x, float* y)
+void CCamera::SetTarget(CEntity* _target)
 {
-	targetX = x;
-	targetY = y;
+	this->target = _target;
 }

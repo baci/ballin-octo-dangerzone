@@ -20,12 +20,13 @@ void CEnemy::OnLoop()
 	// move in one direction as long as possible
 	if(_walkDir == WALKDIR_LEFT)
 	{
-		if(!PosValid(x-width, y-height) || !PosValid(x-width, y) || PosValid(x-width, y+height)) 
+		// TODO change to posvalidtile and handle player collision in oncollision -> add current area to capp class
+		if(!PosValid(x-width, y) || PosValid(x-width, y+height)) 
 			_walkDir = WALKDIR_RIGHT;
 	}
 	else if(_walkDir == WALKDIR_RIGHT)
 	{
-		if(!PosValid(x+width, y-height) || !PosValid(x+width, y) || PosValid(x+width, y+height)) 
+		if(!PosValid(x+width, y) || PosValid(x+width, y+height)) 
 			_walkDir = WALKDIR_LEFT;
 	}
 	
@@ -61,6 +62,6 @@ void CEnemy::OnAnimate()
  
 bool CEnemy::OnCollision(CEntity* entity)
 {
-	ChangeDirection();
+	
 	return true;
 }

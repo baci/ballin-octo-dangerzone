@@ -1,4 +1,5 @@
 #include "CEntity.h"
+#include "CCamera.h"
 
 std::vector<CEntity*> CEntity::EntityList;
 
@@ -47,7 +48,7 @@ bool CEntity::OnLoad(char* file, int width, int height, int maxFrames)
 	if((surfEntity = CSurface::OnLoad(const_cast<char*>(filepath.c_str()))) == NULL)
 		return false;
 
-	CSurface::Transparent(surfEntity, 255, 0, 255, false);
+	CSurface::Transparent(surfEntity, 255, 255, 255, false);
 
 	this->width = width;
 	this->height = height;

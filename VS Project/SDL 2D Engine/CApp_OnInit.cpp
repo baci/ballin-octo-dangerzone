@@ -37,8 +37,8 @@ bool CApp::OnInit()
 	CEntity::EntityList.push_back(&player);
 	CEntity::EntityList.push_back(&enemy);
 
-	CCamera::CameraControl.targetMode = TARGET_MODE_CENTER;
-	CCamera::CameraControl.SetTarget(&player.x, &player.y);
+	CCamera::CameraControl.targetMode = TARGET_MODE_FOLLOW;
+	CCamera::CameraControl.SetTarget(&player);
 
     return true;
 }
