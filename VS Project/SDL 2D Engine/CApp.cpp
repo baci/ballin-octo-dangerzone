@@ -1,8 +1,7 @@
 #include "CApp.h"
 
 CApp::CApp() {
-    Surf_Display = NULL;
-    surfBackground = NULL;
+    _surfDisplay = NULL;
 
     Running = true;
 }
@@ -11,12 +10,12 @@ int CApp::OnExecute() {
     if(OnInit()==false)
         return -1;
 
-    SDL_Event Event;
+    SDL_Event event;
 
     while(Running)
     {
-        while(SDL_PollEvent(&Event)){
-            OnEvent(&Event);
+        while(SDL_PollEvent(&event)){
+            OnEvent(&event);
         }
 
         OnLoop();

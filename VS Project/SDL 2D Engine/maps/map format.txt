@@ -1,7 +1,0 @@
-area consists of:
-tileset path
-width height
-tiles with following information: x:y
-
-x=TileID (pos. in tileset)
-y=TypeID (None, Normal, Block)

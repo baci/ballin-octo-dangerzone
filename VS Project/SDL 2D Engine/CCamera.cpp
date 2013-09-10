@@ -22,7 +22,7 @@ int CCamera::GetX()
 	if(target != NULL)
 	{
 		if(targetMode == TARGET_MODE_CENTER)
-			return (this->target->x - (WWIDTH / 2));
+			return (int)(this->target->x - (WWIDTH / 2));
 		else if(targetMode == TARGET_MODE_FOLLOW)
 		{
 			if(this->target->x > (x + (WWIDTH * followThreshold)))
@@ -32,7 +32,7 @@ int CCamera::GetX()
 			return x;
 		}
 
-		return this->target->x;
+		return (int)this->target->x;
 	}
 	
 	return x;
@@ -43,7 +43,7 @@ int CCamera::GetY()
 	if(target != NULL)
 	{
 		if(targetMode == TARGET_MODE_CENTER)
-			return (this->target->y - (WHEIGHT / 2));
+			return (int)(this->target->y - (WHEIGHT / 2));
 		else if(targetMode == TARGET_MODE_FOLLOW)
 		{
 			if(this->target->y > (y + (WHEIGHT * followThreshold)))
@@ -53,7 +53,7 @@ int CCamera::GetY()
 			return y;
 		}
 
-		return this->target->y;
+		return (int)this->target->y;
 	}
 	
 	return y;

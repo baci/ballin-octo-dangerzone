@@ -3,18 +3,16 @@
 
 void CApp::OnRender()
 {
-    CSurface::OnDraw(Surf_Display, surfBackground, 0, 0, 0, 0, 600, 600);
-
-	// render area
-	CArea::areaControl.OnRender(Surf_Display, -CCamera::CameraControl.GetX(), -CCamera::CameraControl.GetY());
+    // render area
+	CArea::areaControl.OnRender(_surfDisplay, -CCamera::CameraControl.GetX(), -CCamera::CameraControl.GetY());
 	
 	// render entities
-	for(int i=0; i<CEntity::EntityList.size(); i++)
+	for(uint16_t i=0; i<CEntity::EntityList.size(); i++)
 	{
 		if(!CEntity::EntityList[i]) continue;
 
-		CEntity::EntityList[i]->OnRender(Surf_Display);
+		CEntity::EntityList[i]->OnRender(_surfDisplay);
 	}
 
-    SDL_Flip(Surf_Display);
+    SDL_Flip(_surfDisplay);
 }

@@ -1,4 +1,6 @@
 #include "CArea.h"
+#include "CEnemy.h"
+#include "CPlayer.h"
 
 CArea CArea::areaControl;
 
@@ -7,23 +9,30 @@ CArea::CArea()
 	areaSizeX = 0;
 	areaSizeY = 0;
 	surfTileset = NULL;
+	areaBackground = NULL;
+}
+
+CPlayer* CArea::GetPlayer()
+{
+	return player;
 }
 
 /*
-parsing the map from the file...
+parsing the map data from the specified file.
+return true on success
 */
 bool CArea::OnLoad(char* file)
 {
 	tileList.clear();
 
-	FILE* fileHandle = fopen(file, "r");
+	FILE* fileHandle = NULL;
+	fopen_s(&fileHandle, file, "r");
 	if(fileHandle == NULL)
 		return false;
 
-	// load the tileset
+	// load the area tileset file
 	char tilesetFile[1000];
-	fscanf(fileHandle, "%s\n", tilesetFile);
-
+	fscanf_s(fileHandle, "%s\n", tilesetFile);
 	if((surfTileset = CSurface::OnLoad(tilesetFile)) == false)
 	{
 		fclose(fileHandle);
@@ -31,7 +40,7 @@ bool CArea::OnLoad(char* file)
 	}
 
 	// load area size
-	fscanf(fileHandle, "%d %d\n", &areaSizeX, &areaSizeY);
+	fscanf_s(fileHandle, "%d:%d\n", &areaSizeX, &areaSizeY);
 
 	// parse the tiles
 	for(int y=0; y < areaSizeY; y++)
@@ -39,12 +48,65 @@ bool CArea::OnLoad(char* file)
 		for(int x=0; x < areaSizeX; x++)
 		{
 			CTile tempTile;
-			fscanf(fileHandle, "%d:%d ", &tempTile.TileID, &tempTile.TypeID);
+			fscanf_s(fileHandle, "%d:%d ", &tempTile.TileID, &tempTile.TypeID);
 			tileList.push_back(tempTile);
 		}
-		fscanf(fileHandle, "\n");
+		fscanf_s(fileHandle, "\n");
 	}
 
+	// load the background file
+	char backgroundFile[1000]; // TODO fucking hell...
+	fscanf_s(fileHandle, "%s\n", backgroundFile);
+	if((areaBackground = CSurface::OnLoad(backgroundFile)) == NULL)
+		return false;
+
+	// load the player sprite file and initialize player
+	char playerSpriteFile[1000];
+	int playerSpriteWidth = 0;
+	int playerSpriteHeigth = 0;
+	int playerSpriteFPS = 0;
+	int playerPosX = 0;
+	int playerPosY = 0;
+	fscanf_s(fileHandle, "%s ", playerSpriteFile);
+	fscanf_s(fileHandle, "%i:%i ", &playerSpriteWidth, &playerSpriteHeigth);
+	fscanf_s(fileHandle, "%i ", &playerSpriteFPS);
+	fscanf_s(fileHandle, "%i:%i\n", &playerPosX, &playerPosY);
+	player = new CPlayer();
+	if(player->OnLoad(playerSpriteFile, playerSpriteWidth, playerSpriteHeigth, playerSpriteFPS) == false)
+		return false;
+	player->x = (float)playerPosX;
+	player->y = (float)playerPosY;
+	CEntity::EntityList.push_back(player);
+	
+	// set camera target to player
+	CCamera::CameraControl.targetMode = TARGET_MODE_FOLLOW;
+	CCamera::CameraControl.SetTarget(player);
+
+	// load the enemy sprite files and initialize enemies
+	int enemyAmount = 0;
+	fscanf_s(fileHandle, "%i\n", &enemyAmount);
+	for(int i=0; i<enemyAmount; i++)
+	{
+		CEnemy* enemy;
+		enemy = new CEnemy();
+		char enemySpriteFile[1000];
+		int enemySpriteWidth = 0;
+		int enemySpriteHeight = 0;
+		int enemySpriteFPS = 0;
+		int enemyPosX = 0;
+		int enemyPosY = 0;
+		fscanf_s(fileHandle, "%s ", enemySpriteFile);
+		fscanf_s(fileHandle, "%i:%i ", &enemySpriteWidth, &enemySpriteHeight);
+		fscanf_s(fileHandle, "%i ", &enemySpriteFPS);
+		fscanf_s(fileHandle, "%i:%i\n", &enemyPosX, &enemyPosY);
+		if(enemy->OnLoad(enemySpriteFile, enemySpriteWidth, enemySpriteHeight, enemySpriteFPS) == false)
+			return false;
+
+		enemy->x = (float)enemyPosX;
+		enemy->y = (float)enemyPosY;
+		CEnemy::EntityList.push_back(enemy);
+	}
+	
 	fclose(fileHandle);
 
 	return true;
@@ -52,6 +114,9 @@ bool CArea::OnLoad(char* file)
 
 void CArea::OnRender(SDL_Surface* surfDisplay, int cameraX, int cameraY)
 {
+	// draw the background
+	CSurface::OnDraw(surfDisplay, areaBackground, 0, 0, 0, 0, 600, 600);
+	
 	// render the tiles of the map
 	if(surfTileset == NULL) return;
 
@@ -88,11 +153,13 @@ void CArea::OnCleanup()
 		SDL_FreeSurface(surfTileset);
 
 	tileList.clear();
+
+	SDL_FreeSurface(areaBackground);
 }
 
 CTile* CArea::GetTile(int x, int y)
 {
-	int ID = x / TILE_SIZE;
+	uint8_t ID = x / TILE_SIZE;
 	ID = ID + (areaSizeX * (y / TILE_SIZE));
 
 	if(ID < 0 || ID >= tileList.size()) 

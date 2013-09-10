@@ -13,8 +13,7 @@ void CApp::OnCleanup()
 
 	CArea::areaControl.OnCleanup();
 
-    SDL_FreeSurface(Surf_Display);
-	SDL_FreeSurface(surfBackground);
+    SDL_FreeSurface(_surfDisplay);
 
 	// close joystick handler
 	if(joystick != NULL)

@@ -25,12 +25,7 @@ class CApp : public CEvent {
 private:
     bool            Running;
 
-    SDL_Surface*    Surf_Display;
-
-	SDL_Surface*	surfBackground;
-
-	CPlayer player;
-	CEnemy enemy;
+    SDL_Surface*    _surfDisplay;
 
 	SDL_Joystick *joystick;
 

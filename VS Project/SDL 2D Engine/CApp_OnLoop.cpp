@@ -4,7 +4,7 @@ void CApp::OnLoop()
 {
 	CFPS::FPSControl.OnLoop();
 	
-	for(int i=0; i<CEntity::EntityList.size(); i++)
+	for(uint16_t i=0; i<CEntity::EntityList.size(); i++)
 	{
 		if(!CEntity::EntityList[i]) continue;
 
@@ -12,7 +12,7 @@ void CApp::OnLoop()
 	}
 
 	// handle collision events
-	for(int i=0; i<CEntityCol::entityColList.size(); i++)
+	for(uint16_t i=0; i<CEntityCol::entityColList.size(); i++)
 	{
 		CEntity* entityA = CEntityCol::entityColList[i].entityA;
 		CEntity* entityB = CEntityCol::entityColList[i].entityB;

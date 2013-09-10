@@ -61,7 +61,7 @@ bool CEntity::OnLoad(char* file, int width, int height, int maxFrames)
 
 void CEntity::OnLoop()
 {
-	// we're not moving
+	// standing
 	if(moveLeft == false && moveRight == false)
 		StopMove();
 	
@@ -124,8 +124,8 @@ void CEntity::OnMove(float moveX, float moveY)
 	canJump = false;
 
 	// position of where we WANT to go in the next iteration of the loop below
-	double newX = 0;
-	double newY = 0;
+	float newX = 0;
+	float newY = 0;
 
 	// get correct movement per second
 	moveX *= CFPS::FPSControl.GetSpeedFactor();
@@ -142,11 +142,13 @@ void CEntity::OnMove(float moveX, float moveY)
 		else			newY = -CFPS::FPSControl.GetSpeedFactor();
 	}
 
+	// actual movement while checking for collisions
 	while(true)
 	{
+		// ghost mode - entity doesn't care about collisions, but sends events to other entities
 		if(flags & ENTITY_FLAG_GHOST)
 		{
-			// we don't care about collisions, but we need to send events to other entities
+			
 			PosValid((int)(x+newX), (int)(y+newY));
 			x += newX;
 			y += newY;
@@ -201,9 +203,13 @@ void CEntity::StopMove()
 	}
 }
 
+/**
+	returns true if entity collides with object of the specified bounds
+	working with rectangular collision boxes
+*/
 bool CEntity::Collides(int oX, int oY, int oW, int oH)
 {
-	// define bounds of the two collision boxes...
+	// bounds of the two collision boxes...
 	int left1, left2;
 	int right1, right2;
 	int top1, top2;
@@ -221,8 +227,7 @@ bool CEntity::Collides(int oX, int oY, int oW, int oH)
 	bottom1 = top1 + height - 1 - colHeight;
 	bottom2 = oY + oH - 1;
 
-	// if all of the sides of the first object are out of range of the second object,
-	// there is no collision.
+	// no collision if first object is out of range of the second object
 	if(bottom1 < top2) return false;
 	else if(top1 > bottom2) return false;
 	else if(right1 < left2) return false;
@@ -257,7 +262,7 @@ bool CEntity::PosValid(int newX, int newY)
 	if(flags & ENTITY_FLAG_MAPONLY) ;
 	else
 	{
-		for(int i=0; i<EntityList.size(); i++)
+		for(uint8_t i=0; i<EntityList.size(); i++)
 		{
 			if(PosValidEntity(EntityList[i], newX, newY) == false) ret = false;
 		}
