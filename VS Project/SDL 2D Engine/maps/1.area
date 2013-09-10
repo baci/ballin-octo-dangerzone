@@ -1,5 +1,11 @@
+# Map Tileset used
 ./tilesets/blocks1.bmp
+# Amount of tiles X:Y
 28:15
+# tiles matrix-style with following information: x:y:z
+# x=TileID (pos. in tileset)
+# y=TypeID (None, Normal, Block)
+### NOT YET IMPLEMENTED z=event callback ID (0-x)
 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 
 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 
 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 
@@ -15,8 +21,12 @@
 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 
 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 
 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 
+# Background File Path
 whiteBackground.bmp
+# player spritefile (bounds x:y) FPS (start position x:y (pixels))
 yoshi.png 64:64 8 0:0
+# enemy amount
 2
+# format: spritefile (bounds x:y) FPS (start position x:y (pixels))
 bowsern.png 64:64 4 300:160
 bowsern.png 64:64 4 150:160

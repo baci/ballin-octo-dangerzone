@@ -23,6 +23,8 @@ return true on success
 */
 bool CArea::OnLoad(char* file)
 {
+	char ignoreComment[1000];
+
 	tileList.clear();
 
 	FILE* fileHandle = NULL;
@@ -32,6 +34,7 @@ bool CArea::OnLoad(char* file)
 
 	// load the area tileset file
 	char tilesetFile[1000];
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fscanf_s(fileHandle, "%s\n", tilesetFile);
 	if((surfTileset = CSurface::OnLoad(tilesetFile)) == false)
 	{
@@ -40,8 +43,12 @@ bool CArea::OnLoad(char* file)
 	}
 
 	// load area size
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fscanf_s(fileHandle, "%d:%d\n", &areaSizeX, &areaSizeY);
-
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	// parse the tiles
 	for(int y=0; y < areaSizeY; y++)
 	{
@@ -55,7 +62,8 @@ bool CArea::OnLoad(char* file)
 	}
 
 	// load the background file
-	char backgroundFile[1000]; // TODO fucking hell...
+	char backgroundFile[1000];
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fscanf_s(fileHandle, "%s\n", backgroundFile);
 	if((areaBackground = CSurface::OnLoad(backgroundFile)) == NULL)
 		return false;
@@ -67,6 +75,7 @@ bool CArea::OnLoad(char* file)
 	int playerSpriteFPS = 0;
 	int playerPosX = 0;
 	int playerPosY = 0;
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fscanf_s(fileHandle, "%s ", playerSpriteFile);
 	fscanf_s(fileHandle, "%i:%i ", &playerSpriteWidth, &playerSpriteHeigth);
 	fscanf_s(fileHandle, "%i ", &playerSpriteFPS);
@@ -84,7 +93,9 @@ bool CArea::OnLoad(char* file)
 
 	// load the enemy sprite files and initialize enemies
 	int enemyAmount = 0;
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fscanf_s(fileHandle, "%i\n", &enemyAmount);
+	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	for(int i=0; i<enemyAmount; i++)
 	{
 		CEnemy* enemy;
