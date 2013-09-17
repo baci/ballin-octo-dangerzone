@@ -1,13 +1,8 @@
 #include "CApp.h"
 
-void CApp::OnEvent(SDL_Event* Event)
-{
-	CEvent::OnEvent(Event);
-}
-
 void CApp::OnExit()
 {
-	Running = false;
+	CApp::GetInstance()->_running = false;
 }
 
 void CApp::OnJoyButtonDown(Uint8 which, Uint8 button)
@@ -22,11 +17,6 @@ void CApp::OnJoyButtonDown(Uint8 which, Uint8 button)
 	default:
 		break;
 	}
-}
-
-void CApp::OnJoyButtonUp(Uint8 which, Uint8 button)
-{
-	
 }
 
 void CApp::OnJoyAxis(Uint8 which, Uint8 axis, Sint16 value)
@@ -49,11 +39,6 @@ void CApp::OnJoyAxis(Uint8 which, Uint8 axis, Sint16 value)
 			player->moveLeft = false;
 			player->moveRight = false;
 		}
-	}
-
-	if(axis == 1) // y axis
-	{
-		
 	}
 }
 

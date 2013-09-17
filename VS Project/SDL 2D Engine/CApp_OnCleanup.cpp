@@ -13,12 +13,17 @@ void CApp::OnCleanup()
 
 	CArea::areaControl.OnCleanup();
 
+	SDL_FreeSurface(_debugMessage);
+	TTF_CloseFont( _debugFont );
+    //Quit SDL_ttf
+    TTF_Quit();
+
     SDL_FreeSurface(_surfDisplay);
 
 	// close joystick handler
-	if(joystick != NULL)
+	if(_joystick != NULL)
 	{
-		SDL_JoystickClose(joystick);
+		SDL_JoystickClose(_joystick);
 		SDL_JoystickEventState(SDL_DISABLE);
 	}
 

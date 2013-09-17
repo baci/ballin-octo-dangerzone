@@ -36,9 +36,6 @@
     <ClCompile Include="CSurface.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="CEvent.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="CAnimation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -66,15 +63,15 @@
     <ClCompile Include="CEnemy.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="OSEventHandler.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CApp.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="CSurface.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="CEvent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="CAnimation.h">
@@ -102,6 +99,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="CEnemy.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="OsEventHandler.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

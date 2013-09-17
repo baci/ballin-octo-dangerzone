@@ -83,7 +83,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\sdl\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -140,7 +140,7 @@
     <ClCompile Include="CEnemy.cpp" />
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CEntityCol.cpp" />
-    <ClCompile Include="CEvent.cpp" />
+    <ClCompile Include="OSEventHandler.cpp" />
     <ClCompile Include="CFPS.cpp" />
     <ClCompile Include="CPlayer.cpp" />
     <ClCompile Include="CSurface.cpp" />
@@ -153,7 +153,7 @@
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CEnemy.h" />
     <ClInclude Include="CEntity.h" />
-    <ClInclude Include="CEvent.h" />
+    <ClInclude Include="OsEventHandler.h" />
     <ClInclude Include="CFPS.h" />
     <ClInclude Include="CPlayer.h" />
     <ClInclude Include="CSurface.h" />

@@ -1,9 +1,23 @@
 #include "CApp.h"
 
+CApp* CApp::_instance = NULL;
+
 CApp::CApp() {
     _surfDisplay = NULL;
 
-    Running = true;
+	_debugMessage = NULL;
+	_debugFont = NULL;
+	_debugMode = true;
+
+    _running = true;
+}
+
+CApp* CApp::GetInstance()
+{
+	if (_instance == NULL) {
+		_instance = new CApp();
+	}
+	return _instance;
 }
 
 int CApp::OnExecute() {
@@ -12,10 +26,10 @@ int CApp::OnExecute() {
 
     SDL_Event event;
 
-    while(Running)
+    while(_running)
     {
         while(SDL_PollEvent(&event)){
-            OnEvent(&event);
+            _eventHandler->OnEvent(&event);
         }
 
         OnLoop();
@@ -28,7 +42,5 @@ int CApp::OnExecute() {
 }
 
 int main(int argc, char* argv[]) {
-    CApp theApp;
-
-    return theApp.OnExecute();
+    return CApp::GetInstance()->OnExecute();
 }
