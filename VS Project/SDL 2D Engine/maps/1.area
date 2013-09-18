@@ -24,7 +24,7 @@
 # Background File Path
 whiteBackground.bmp
 # player spritefile (bounds x:y) FPS (start position x:y (pixels))
-yoshi.png 64:64 8 0:0
+yoshi.png 48:65 3 0:0
 # enemy amount
 2
 # format: spritefile (bounds x:y) FPS (start position x:y (pixels))
