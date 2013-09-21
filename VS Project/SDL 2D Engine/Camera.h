@@ -14,15 +14,15 @@ class Entity;
 
 class Camera {
     public:
-        static Camera CameraControl;
+        static Camera Instance;
 		int targetMode;
 		Entity* target;
 
 		float followThreshold; // threshold of screen border distance to follow target sprite
  
     private:
-        int x;
-        int y;        
+        int _x;
+        int _y;        
  
     public:
         Camera();
@@ -30,9 +30,15 @@ class Camera {
 		/*
 		move by relative values
 		*/
-		void OnMove(int moveX, int moveY);
+		void MoveRelative(int moveX, int moveY);
+
+		/*
+		adjusting camera according to camera mode and target position
+		*/
+		void Update();
+
 		int GetX();
-        int GetY();
+		int GetY();
  
 		/*
 		move to absolute position

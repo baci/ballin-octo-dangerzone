@@ -18,13 +18,13 @@ private:
 public:
 	Enemy();
 
-	bool OnLoad(char* file, int width, int height, int maxFrames);
+	bool Load(char* file, int width, int height, int maxFrames);
  
-    void OnLoop();
+    void Update();
 
 	void ChangeDirection();
  
-    void OnAnimate();
+    void Animate();
  
     void OnCollision(Entity* entity);
 };

@@ -5,24 +5,33 @@
 #include <string>
 
 #include "Area.h"
-#include "SpriteAnimation.h"
+#include "SpriteAnimator.h"
 #include "GameTimer.h"
 #include "ExtendedSurface.h"
 
 class CApp;
 
-enum
+enum ENTITY_TYPE
 {
-	ENTITY_TYPE_GENERIC = 0,
-	ENTITY_TYPE_PLAYER
+	GENERIC = 0,
+	PLAYER
 };
 
-enum
+enum ENTITY_FLAG
 {
-	ENTITY_FLAG_NONE = 0,
-	ENTITY_FLAG_GRAVITY = 0x00000001,	// entity affected by gravity
-	ENTITY_FLAG_GHOST = 0x00000002,		// entity can walk through walls
-	ENTITY_FLAG_MAPONLY = 0x00000004	// entity only collides with map (not with other entities)
+	NO_FLAG = 0,
+	GRAVITY = 0x00000001,	// entity affected by gravity
+	GHOST = 0x00000002,		// entity can walk through walls
+	MAPONLY = 0x00000004	// entity only collides with map (not with other entities)
+};
+
+enum ENTITY_STATE
+{
+	NO_STATE = 0,
+	MOVE_LEFT,
+	MOVE_RIGHT,
+	DIE,
+	DEAD
 };
 
 class Camera;
@@ -32,7 +41,7 @@ class Camera;
 */
 class Entity {
 public:
-	static std::vector<Entity*>	EntityList; // list of all existing entities
+	static std::vector<Entity*>	currentEntities; // list of all existing entities
 
 	// entity bounds (pos. in world)
 	float	x;
@@ -40,43 +49,37 @@ public:
 	int		width;
 	int		height;
 
-	// flags whether entity is moving in one direction.
-	bool	moveLeft;
-	bool	moveRight;
-
 	// entity properties
-	int		type; // entity type
-	int		flags; // flags for special properties of entity.
+	ENTITY_STATE	state;
+	ENTITY_TYPE		type;
+	ENTITY_FLAG		flags; // flags for special properties of entity.
 
 	// movement max. values (pixel per seconds)
 	float	maxSpeedX;
 	float	maxSpeedY;
 
 protected:
-	SpriteAnimation	animControl;
+	SpriteAnimator	animControl;
 	SDL_Surface*	surfEntity;
 
 	// current movement properties (pixel per second)
-	float	speedX;
-	float	speedY;
-	float	accelX;
-	float	accelY;
+	float	_speedX;
+	float	_speedY;
+	float	_accelX;
+	float	_accelY;
 
 	// sprite animation state
-	int		currentFrameCol;
-	int		currentFrameRow;
-	int		framesAmount;
+	int		_currentFrameCol;
+	int		_currentFrameRow;
+	int		_framesAmount;
 
 	// collision offset values
-	int		colX;
-	int		colY;
-	int		colWidth;
-	int		colHeight;
+	int		_colX;
+	int		_colY;
+	int		_colWidth;
+	int		_colHeight;
 
-	bool	canJump;
-
-	bool	isDead;
-	bool	isPlayer;
+	bool	_canJump;
 
 public:
 	Entity();
@@ -85,17 +88,17 @@ public:
 	loading the entity spritefile and setting pink as transparent color
 	TODO: do with/without transparent color or let it be specified
 	*/
-	virtual bool OnLoad(char* file, int width, int height, int maxFrames);
+	virtual bool Load(char* file, int width, int height, int maxFrames);
 
-	virtual void OnLoop();
-	virtual void OnRender(SDL_Surface* surfDisplay);
-	virtual void OnCleanup();
-	virtual void OnAnimate();
+	virtual void Update();
+	virtual void Render(SDL_Surface* surfDisplay);
+	virtual void Cleanup();
+	virtual void Animate();
 	virtual void OnCollision(Entity* entity);
-	virtual void OnDie();
+	virtual void Die();
 
-	bool IsDead(){return isDead;}
-	bool IsPlayer(){return isPlayer;}
+	bool IsDead(){return state == DEAD;}
+	bool IsPlayer(){return type == PLAYER;}
 
 	/*
 	move in a certain direction in pixel/seconds with acceleration.
@@ -114,9 +117,9 @@ protected:
 	/**
 	checks if the tile the entity is trying to move to is valid.
 	*/
-	bool PosValid(int newX, int newY);
-	bool PosValidTile(Tile* tile);
-	bool PosValidEntity(Entity* entity, int newX, int newY);
+	bool IsPositionValid(int newX, int newY);
+	bool IsPositionValidTile(Tile* tile);
+	bool IsPositionValidEntity(Entity* entity, int newX, int newY);
 };
 
 /**

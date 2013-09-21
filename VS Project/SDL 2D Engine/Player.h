@@ -14,13 +14,13 @@ class Player : public Entity {
 
 		void Spawn(float posX, float posY);
  
-        bool OnLoad(char* file, int width, int height, int maxFrames);
+        bool Load(char* file, int width, int height, int maxFrames);
  
-        void OnAnimate();
+        void Animate();
  
         void OnCollision(Entity* entity);
 
-		void OnDie();
+		void Die();
 };
  
 #endif

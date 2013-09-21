@@ -46,16 +46,16 @@ public:
     /**
     main loop function
     */
-    int OnExecute();
+    int Execute();
 
     /**
     Initialize application window
     */
-    bool OnInit();
+    bool Init();
     /**
-    handle user input
+    handle system event
     */
-    void OnEvent(SDL_Event* Event);
+    void HandleEvent(SDL_Event* Event);
 
 	static void OnExit();
 	static void OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode);
@@ -66,15 +66,15 @@ public:
     /**
     update game state
     */
-    void OnLoop();
+    void Update();
     /**
     render contents
     */
-    void OnRender();
+    void Render();
     /**
     cleanup application window
     */
-    void OnCleanup();
+    void Cleanup();
 
 };
 

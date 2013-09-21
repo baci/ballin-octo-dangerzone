@@ -128,13 +128,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SpriteAnimation.cpp" />
+    <ClCompile Include="SpriteAnimator.cpp" />
     <ClCompile Include="MainGame.cpp" />
-    <ClCompile Include="MainGame_OnCleanup.cpp" />
-    <ClCompile Include="MainGame_OnEvent.cpp" />
-    <ClCompile Include="MainGame_OnInit.cpp" />
-    <ClCompile Include="MainGame_OnLoop.cpp" />
-    <ClCompile Include="MainGame_OnRender.cpp" />
+    <ClCompile Include="MainGame_Cleanup.cpp" />
+    <ClCompile Include="MainGame_HandleEvent.cpp" />
+    <ClCompile Include="MainGame_Init.cpp" />
+    <ClCompile Include="MainGame_Loop.cpp" />
+    <ClCompile Include="MainGame_Render.cpp" />
     <ClCompile Include="Area.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -147,7 +147,7 @@
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SpriteAnimation.h" />
+    <ClInclude Include="SpriteAnimator.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Area.h" />
     <ClInclude Include="Camera.h" />

@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include "Camera.h"
 
-std::vector<Entity*> Entity::EntityList;
+std::vector<Entity*> Entity::currentEntities;
 
 Entity::Entity()
 {
@@ -11,31 +11,29 @@ Entity::Entity()
 	y = 0;
 	width = 0;
 	height = 0;
-	moveLeft = false;
-	moveRight = false;
+	state = NO_STATE;
 
-	type = ENTITY_TYPE_GENERIC;
-	flags = ENTITY_FLAG_GRAVITY;
-	isDead = false;
+	type = GENERIC;
+	flags = GRAVITY;
 
-	speedX = 0;
-	speedY = 0;
-	accelX = 0;
-	accelY = 0;
+	_speedX = 0;
+	_speedY = 0;
+	_accelX = 0;
+	_accelY = 0;
 	maxSpeedX = 10;
 	maxSpeedY = 10;
 
-	currentFrameCol = 0;
-	currentFrameRow = 0;
+	_currentFrameCol = 0;
+	_currentFrameRow = 0;
 
-	colX = 0;
-	colY = 0;
-	colWidth = 0;
-	colHeight = 0;
+	_colX = 0;
+	_colY = 0;
+	_colWidth = 0;
+	_colHeight = 0;
 
-	canJump = false;
+	_canJump = false;
 }
-bool Entity::OnLoad(char* file, int width, int height, int maxFrames)
+bool Entity::Load(char* file, int width, int height, int maxFrames)
 {
 	std::string fs = file;
 	std::string path = "./charsets/";
@@ -47,51 +45,51 @@ bool Entity::OnLoad(char* file, int width, int height, int maxFrames)
 
 	this->width = width;
 	this->height = height;
-	this->framesAmount = maxFrames;
+	this->_framesAmount = maxFrames;
 	
 	animControl.maxFrames = maxFrames;
 
 	return true;
 }
 
-void Entity::OnLoop()
+void Entity::Update()
 {
-	if(isDead)
+	if(state == DEAD)
 		return;
 
 	// standing
-	if(moveLeft == false && moveRight == false)
+	if(state != MOVE_LEFT && state != MOVE_RIGHT)
 		StopMove();
 	
-	if(moveLeft)
-		accelX = -0.5;
-	else if(moveRight)
-		accelX = 0.5;
+	if(state == MOVE_LEFT)
+		_accelX = -0.5;
+	else if(state == MOVE_RIGHT)
+		_accelX = 0.5;
 
-	if(flags & ENTITY_FLAG_GRAVITY)
-		accelY = 0.75f;
+	if(flags & GRAVITY)
+		_accelY = 0.75f;
 
-	speedX += accelX * GameTimer::FPSControl.GetSpeedFactor();
-	speedY += accelY * GameTimer::FPSControl.GetSpeedFactor();
+	_speedX += _accelX * GameTimer::FPSControl.GetSpeedFactor();
+	_speedY += _accelY * GameTimer::FPSControl.GetSpeedFactor();
 
-	if(speedX > maxSpeedX) speedX = maxSpeedX;
-	if(speedX < -maxSpeedX) speedX = -maxSpeedX;
-	if(speedY > maxSpeedY) speedY = maxSpeedY;
-	if(speedY < -maxSpeedY) speedY = -maxSpeedY;
+	if(_speedX > maxSpeedX) _speedX = maxSpeedX;
+	if(_speedX < -maxSpeedX) _speedX = -maxSpeedX;
+	if(_speedY > maxSpeedY) _speedY = maxSpeedY;
+	if(_speedY < -maxSpeedY) _speedY = -maxSpeedY;
 
-	OnAnimate();
-	OnMove(speedX, speedY);
+	Animate();
+	OnMove(_speedX, _speedY);
 }
 
-void Entity::OnRender(SDL_Surface* surfDisplay)
+void Entity::Render(SDL_Surface* surfDisplay)
 {
-	if(surfEntity == NULL || surfDisplay == NULL || isDead) return;
+	if(surfEntity == NULL || surfDisplay == NULL || state == DEAD) return;
 
-	ExtendedSurface::OnDraw(surfDisplay, surfEntity, x - Camera::CameraControl.GetX(), y - Camera::CameraControl.GetY(), 
-		(currentFrameCol + animControl.GetCurrentFrame())*width, currentFrameRow*height, width, height);
+	ExtendedSurface::OnDraw(surfDisplay, surfEntity, x - Camera::Instance.GetX(), y - Camera::Instance.GetY(), 
+		(_currentFrameCol + animControl.GetCurrentFrame())*width, _currentFrameRow*height, width, height);
 }
 
-void Entity::OnCleanup()
+void Entity::Cleanup()
 {
 	if(surfEntity)
 		SDL_FreeSurface(surfEntity);
@@ -99,14 +97,14 @@ void Entity::OnCleanup()
 	surfEntity = NULL;
 }
 
-void Entity::OnAnimate()
+void Entity::Animate()
 {
-	if(moveLeft)
-		currentFrameRow = 1;
-	else if(moveRight)
-		currentFrameRow = 2;
+	if(state == MOVE_LEFT)
+		_currentFrameRow = 1;
+	else if(state == MOVE_RIGHT)
+		_currentFrameRow = 2;
 
-	if(canJump)
+	if(_canJump)
 		animControl.OnAnimate();
 }
 
@@ -115,16 +113,16 @@ void Entity::OnCollision(Entity* entity)
 	// purely virtual
 }
 
-void Entity::OnDie()
+void Entity::Die()
 {
-	isDead = true;
+	state = DEAD;
 }
 
 void Entity::OnMove(float moveX, float moveY)
 {
 	if(moveX == 0 && moveY == 0) return;
 
-	canJump = false;
+	_canJump = false;
 
 	// position of where we WANT to go in the next iteration of the loop below
 	float newX = 0;
@@ -149,30 +147,30 @@ void Entity::OnMove(float moveX, float moveY)
 	while(true)
 	{
 		// ghost mode - entity doesn't care about collisions, but sends events to other entities
-		if(flags & ENTITY_FLAG_GHOST)
+		if(flags & GHOST)
 		{
 			
-			PosValid((int)(x+newX), (int)(y+newY));
+			IsPositionValid((int)(x+newX), (int)(y+newY)); // called for collision on other entities
 			x += newX;
 			y += newY;
 		}
 		else
 		{
 			// move or stop x movement on collision on the x axis
-			if(PosValid((int)(x+newX), (int)(y)))
+			if(IsPositionValid((int)(x+newX), (int)(y)))
 				x += newX;
 			else
-				speedX = 0;
+				_speedX = 0;
 
 			// move or stop y movement on collision on the y axis
-			if(PosValid((int)(x), (int)(y+newY)))
+			if(IsPositionValid((int)(x), (int)(y+newY)))
 				y += newY;
 			else
 			{
 				if(moveY > 0)
-					canJump = true;
+					_canJump = true;
 
-				speedY = 0;
+				_speedY = 0;
 			}
 		}
 
@@ -192,17 +190,20 @@ void Entity::OnMove(float moveX, float moveY)
 	}
 }
 
+/*
+	invert acceleration until zero-point.
+*/
 void Entity::StopMove()
 {
-	if(speedX > 0)
-		accelX = -1;
-	if(speedX < 0)
-		accelX = 1;
+	if(_speedX > 0)
+		_accelX = -1;
+	if(_speedX < 0)
+		_accelX = 1;
 
-	if(speedX < 2.0f && speedX > -2.0f)
+	if(_speedX < 2.0f && _speedX > -2.0f)
 	{
-		accelX = 0;
-		speedX = 0;
+		_accelX = 0;
+		_speedX = 0;
 	}
 }
 
@@ -218,16 +219,16 @@ bool Entity::Collides(int oX, int oY, int oW, int oH)
 	int top1, top2;
 	int bottom1, bottom2;
 
-	int tX = (int)x + colX;
-	int tY = (int)y + colY;
+	int tX = (int)x + _colX;
+	int tY = (int)y + _colY;
 
 	left1 = tX;
 	left2 = oX;
-	right1 = left1 + width - 1 - colWidth;
+	right1 = left1 + width - 1 - _colWidth;
 	right2 = oX + oW - 1;
 	top1 = tY;
 	top2 = oY;
-	bottom1 = top1 + height - 1 - colHeight;
+	bottom1 = top1 + height - 1 - _colHeight;
 	bottom2 = oY + oH - 1;
 
 	// no collision if first object is out of range of the second object
@@ -242,14 +243,14 @@ bool Entity::Collides(int oX, int oY, int oW, int oH)
 /**
 	newX, newY: position of where I want to move next
 */
-bool Entity::PosValid(int newX, int newY)
+bool Entity::IsPositionValid(int newX, int newY)
 {
 	bool ret = true;
 
-	int startX = (newX + colX) / TILE_SIZE;
-	int startY = (newY + colY) / TILE_SIZE;
-	int endX = ((newX + colX) + width - colWidth - 1) / TILE_SIZE;
-	int endY = ((newY + colY) + height - colHeight - 1) / TILE_SIZE;
+	int startX = (newX + _colX) / TILE_SIZE;
+	int startY = (newY + _colY) / TILE_SIZE;
+	int endX = ((newX + _colX) + width - _colWidth - 1) / TILE_SIZE;
+	int endY = ((newY + _colY) + height - _colHeight - 1) / TILE_SIZE;
 
 	// check for collision with map (getting all tileIds that the entity is over)
 	for(int iY = startY; iY <= endY; iY++)
@@ -257,24 +258,24 @@ bool Entity::PosValid(int newX, int newY)
 		for(int iX = startX; iX <= endX; iX++)
 		{
 			Tile* tile = Area::areaControl.GetTile(iX * TILE_SIZE, iY * TILE_SIZE);
-			if(PosValidTile(tile) == false) ret = false;
+			if(IsPositionValidTile(tile) == false) ret = false;
 		}
 	}
 
 	// check for collision with entity
-	if(flags & ENTITY_FLAG_MAPONLY) ;
+	if(flags & MAPONLY) ;
 	else
 	{
-		for(uint8_t i=0; i<EntityList.size(); i++)
+		for(uint8_t i=0; i<currentEntities.size(); i++)
 		{
-			if(PosValidEntity(EntityList[i], newX, newY) == false) ret = false;
+			if(IsPositionValidEntity(currentEntities[i], newX, newY) == false) ret = false;
 		}
 	}
 
 	return ret;
 }
 
-bool Entity::PosValidTile(Tile* tile)
+bool Entity::IsPositionValidTile(Tile* tile)
 {
 	if(tile == NULL) return true;
 
@@ -283,10 +284,10 @@ bool Entity::PosValidTile(Tile* tile)
 	return true;
 }
 
-bool Entity::PosValidEntity(Entity* entity, int newX, int newY)
+bool Entity::IsPositionValidEntity(Entity* entity, int newX, int newY)
 {
-	if(this != entity && entity != NULL && entity->flags ^ ENTITY_FLAG_MAPONLY && entity->IsDead() == false &&
-		entity->Collides(newX + colX, newY + colY, width - colWidth, height - colHeight) == true)
+	if(this != entity && entity != NULL && entity->flags ^ MAPONLY && entity->IsDead() == false &&
+		entity->Collides(newX + _colX, newY + _colY, width - _colWidth, height - _colHeight) == true)
 	{
 		EntityCol entityCol;
 		entityCol.entityA = this;
@@ -301,8 +302,8 @@ bool Entity::PosValidEntity(Entity* entity, int newX, int newY)
 
 bool Entity::Jump()
 {
-	if(canJump == false) return false;
+	if(_canJump == false) return false;
 
-	speedY = -maxSpeedY;
+	_speedY = -maxSpeedY;
 	return true;
 }

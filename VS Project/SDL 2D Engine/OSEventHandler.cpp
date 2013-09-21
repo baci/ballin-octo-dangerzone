@@ -12,7 +12,7 @@ OSEventHandler::~OSEventHandler() {
 /*
 triggered on incoming event from SDL
 */
-void OSEventHandler::OnEvent(SDL_Event* ev) {
+void OSEventHandler::HandleEvent(SDL_Event* ev) {
     switch(ev->type) {
 		// system events
 

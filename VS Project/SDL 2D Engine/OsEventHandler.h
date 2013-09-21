@@ -12,7 +12,7 @@ using namespace std;
 
 /**
 	generic OS event handler system.
-	OnEvent() function checks event type and calls according delegate,
+	HandleEvent() checks event type and calls according delegate,
 	to which other classes can subscribe.
 */
 class OSEventHandler {
@@ -207,7 +207,7 @@ public:
 
 	virtual ~OSEventHandler();
  
-    virtual void OnEvent(SDL_Event* ev);
+    virtual void HandleEvent(SDL_Event* ev);
         
 
 private:

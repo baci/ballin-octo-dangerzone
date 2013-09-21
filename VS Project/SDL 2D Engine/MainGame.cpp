@@ -20,8 +20,8 @@ MainGame* MainGame::GetInstance()
 	return _instance;
 }
 
-int MainGame::OnExecute() {
-    if(OnInit()==false)
+int MainGame::Execute() {
+    if(Init()==false)
         return -1;
 
     SDL_Event event;
@@ -29,18 +29,18 @@ int MainGame::OnExecute() {
     while(_running)
     {
         while(SDL_PollEvent(&event)){
-            _eventHandler->OnEvent(&event);
+            _eventHandler->HandleEvent(&event);
         }
 
-        OnLoop();
-        OnRender();
+        Update();
+        Render();
     }
 
-    OnCleanup();
+    Cleanup();
 
     return 0;
 }
 
 int main(int argc, char* argv[]) {
-    return MainGame::GetInstance()->OnExecute();
+    return MainGame::GetInstance()->Execute();
 }

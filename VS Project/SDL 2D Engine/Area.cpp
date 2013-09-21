@@ -81,14 +81,14 @@ bool Area::OnLoad(char* file)
 	fscanf_s(fileHandle, "%i ", &playerSpriteFPS);
 	fscanf_s(fileHandle, "%i:%i\n", &playerPosX, &playerPosY);
 	player = new Player();
-	if(player->OnLoad(playerSpriteFile, playerSpriteWidth, playerSpriteHeigth, playerSpriteFPS) == false)
+	if(player->Load(playerSpriteFile, playerSpriteWidth, playerSpriteHeigth, playerSpriteFPS) == false)
 		return false;
 	player->Spawn((float)playerPosX, (float)playerPosY);
-	Entity::EntityList.push_back(player);
+	Entity::currentEntities.push_back(player);
 	
 	// set camera target to player
-	Camera::CameraControl.targetMode = TARGET_MODE_FOLLOW;
-	Camera::CameraControl.SetTarget(player);
+	Camera::Instance.targetMode = TARGET_MODE_FOLLOW;
+	Camera::Instance.SetTarget(player);
 
 	// load the enemy sprite files and initialize enemies
 	int enemyAmount = 0;
@@ -109,12 +109,12 @@ bool Area::OnLoad(char* file)
 		fscanf_s(fileHandle, "%i:%i ", &enemySpriteWidth, &enemySpriteHeight);
 		fscanf_s(fileHandle, "%i ", &enemySpriteFPS);
 		fscanf_s(fileHandle, "%i:%i\n", &enemyPosX, &enemyPosY);
-		if(enemy->OnLoad(enemySpriteFile, enemySpriteWidth, enemySpriteHeight, enemySpriteFPS) == false)
+		if(enemy->Load(enemySpriteFile, enemySpriteWidth, enemySpriteHeight, enemySpriteFPS) == false)
 			return false;
 
 		enemy->x = (float)enemyPosX;
 		enemy->y = (float)enemyPosY;
-		Enemy::EntityList.push_back(enemy);
+		Enemy::currentEntities.push_back(enemy);
 	}
 	
 	fclose(fileHandle);
@@ -169,7 +169,14 @@ void Area::OnCleanup()
 
 Tile* Area::GetTile(int x, int y)
 {
-	uint8_t ID = x / TILE_SIZE;
+	int tileX = x / TILE_SIZE;
+	int tileY = y / TILE_SIZE;
+
+	// TODO so there is the fucking bug
+	if(tileX >= areaSizeX || tileX < 0 || tileY >= areaSizeY || tileY < 0)
+		return NULL;
+	
+	uint8_t ID = tileX;
 	ID = ID + (areaSizeX * (y / TILE_SIZE));
 
 	if(ID < 0 || ID >= tileList.size()) 
