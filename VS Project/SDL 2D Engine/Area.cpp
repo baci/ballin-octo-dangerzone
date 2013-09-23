@@ -2,10 +2,11 @@
 #include "Enemy.h"
 #include "Player.h"
 
-Area Area::areaControl;
+Area Area::Instance;
 
 Area::Area()
 {
+	//Instance = this;
 	areaSizeX = 0;
 	areaSizeY = 0;
 	surfTileset = NULL;
@@ -41,6 +42,7 @@ bool Area::OnLoad(char* file)
 		fclose(fileHandle);
 		return false;
 	}
+	ExtendedSurface::Transparent(surfTileset, 255, 255, 255, false);
 
 	// load area size
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
@@ -125,7 +127,7 @@ bool Area::OnLoad(char* file)
 void Area::OnRender(SDL_Surface* surfDisplay, int cameraX, int cameraY)
 {
 	// draw the background
-	ExtendedSurface::OnDraw(surfDisplay, areaBackground, 0, 0, 0, 0, 600, 600);
+	ExtendedSurface::OnDraw(surfDisplay, areaBackground, 0, 0, 0, 0, WWIDTH, WHEIGHT);
 	
 	// render the tiles of the map
 	if(surfTileset == NULL) return;

@@ -11,7 +11,7 @@ void MainGame::Cleanup()
 	}
 	Entity::currentEntities.clear();
 
-	Area::areaControl.OnCleanup();
+	Area::Instance.OnCleanup();
 
 	SDL_FreeSurface(_debugMessage);
 	TTF_CloseFont( _debugFont );

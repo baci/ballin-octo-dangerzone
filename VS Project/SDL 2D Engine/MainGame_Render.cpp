@@ -4,7 +4,7 @@
 void MainGame::Render()
 {
     // render area
-	Area::areaControl.OnRender(_surfDisplay, -Camera::Instance.GetX(), -Camera::Instance.GetY());
+	Area::Instance.OnRender(_surfDisplay, -Camera::Instance.GetX(), -Camera::Instance.GetY());
 	
 	// render entities
 	for(uint16_t i=0; i<Entity::currentEntities.size(); i++)

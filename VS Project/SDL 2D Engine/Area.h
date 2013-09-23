@@ -16,7 +16,7 @@ class Player;
 */
 class Area{
 public:
-	static Area		areaControl;
+	static Area		Instance;
 
 private:
 	int				areaSizeX;

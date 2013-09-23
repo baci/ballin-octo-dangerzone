@@ -147,6 +147,7 @@
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameData.h" />
     <ClInclude Include="SpriteAnimator.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Area.h" />

@@ -92,9 +92,9 @@ void Entity::Cleanup()
 void Entity::Animate()
 {
 	if(state == MOVE_LEFT)
-		_currentFrameRow = 1;
+		_currentFrameRow = 3;
 	else if(state == MOVE_RIGHT)
-		_currentFrameRow = 2;
+		_currentFrameRow = 1;
 
 	if(_canJump)
 		animControl.OnAnimate();
@@ -233,14 +233,14 @@ bool Entity::IsPositionValid(int newX, int newY)
 	int endY = ceil((newY + height - 1) / TILE_SIZE);
 
 	// check for collision with map
-	for(int iY = startY; iY <= endY; iY++)
-	{
+	//for(int iY = startY; iY <= endY; iY++)
+	//{
 		for(int iX = startX; iX <= endX; iX++)
 		{
-			Tile* tile = Area::areaControl.GetTile(iX * TILE_SIZE, iY * TILE_SIZE);
+			Tile* tile = Area::Instance.GetTile(iX * TILE_SIZE, endY * TILE_SIZE);
 			if(IsPositionValidTile(tile) == false) ret = false;
 		}
-	}
+	//}
 
 	// check for collision with entity
 	for(uint8_t i=0; i<currentEntities.size(); i++)

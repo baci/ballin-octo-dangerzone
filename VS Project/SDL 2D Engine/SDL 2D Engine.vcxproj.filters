@@ -104,5 +104,8 @@
     <ClInclude Include="SpriteAnimator.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="GameData.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

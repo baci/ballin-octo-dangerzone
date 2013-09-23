@@ -37,7 +37,7 @@ bool MainGame::Init()
 	_eventHandler->OnKeyDownDelegate.subscribe(OnKeyDown);
 	_eventHandler->OnKeyUpDelegate.subscribe(OnKeyUp);
 
-	if(Area::areaControl.OnLoad("./maps/1.area") == false)
+	if(Area::Instance.OnLoad("./maps/1.area") == false)
 		return false;
 
 	SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);

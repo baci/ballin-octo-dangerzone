@@ -1,8 +1,13 @@
-﻿Build started 23.09.2013 19:41:39.
+﻿Build started 23.09.2013 20:45:00.
      1>Project "C:\Users\Till\Documents\GitHub\ballin-octo-dangerzone\VS Project\SDL 2D Engine\SDL 2D Engine.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IC:\sdl\include /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Area.cpp
-         Area.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IC:\sdl\include /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Entity.cpp
+         Entity.cpp
+     1>c:\users\till\documents\github\ballin-octo-dangerzone\vs project\sdl 2d engine\entity.cpp(81): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\till\documents\github\ballin-octo-dangerzone\vs project\sdl 2d engine\entity.cpp(230): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\till\documents\github\ballin-octo-dangerzone\vs project\sdl 2d engine\entity.cpp(231): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\till\documents\github\ballin-octo-dangerzone\vs project\sdl 2d engine\entity.cpp(232): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\till\documents\github\ballin-octo-dangerzone\vs project\sdl 2d engine\entity.cpp(233): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Till\Documents\GitHub\ballin-octo-dangerzone\VS Project\Debug\SDL 2D Engine.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\sdl\lib\x86 SDL.lib SDLmain.lib SDL_image.lib SDL_ttf.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Till\Documents\GitHub\ballin-octo-dangerzone\VS Project\Debug\SDL 2D Engine.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Till\Documents\GitHub\ballin-octo-dangerzone\VS Project\Debug\SDL 2D Engine.lib" /MACHINE:X86 Debug\SpriteAnimator.obj
          Debug\MainGame.obj
@@ -26,4 +31,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.38
+Time Elapsed 00:00:01.45

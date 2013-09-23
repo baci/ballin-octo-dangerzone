@@ -23,12 +23,12 @@ void Enemy::Update()
 	// move in one direction as long as possible
 	if(_walkDir == WALKDIR_LEFT)
 	{
-		if(!IsPositionValidTile(Area::areaControl.GetTile(x-width, y)) || IsPositionValidTile(Area::areaControl.GetTile(x-width, y+height))) 
+		if(!IsPositionValidTile(Area::Instance.GetTile(x-width, y)) || IsPositionValidTile(Area::Instance.GetTile(x-width, y+height))) 
 			_walkDir = WALKDIR_RIGHT;
 	}
 	else if(_walkDir == WALKDIR_RIGHT)
 	{
-		if(!IsPositionValidTile(Area::areaControl.GetTile(x+width, y)) || IsPositionValidTile(Area::areaControl.GetTile(x+width, y+height))) 
+		if(!IsPositionValidTile(Area::Instance.GetTile(x+width, y)) || IsPositionValidTile(Area::Instance.GetTile(x+width, y+height))) 
 			_walkDir = WALKDIR_LEFT;
 	}
 	

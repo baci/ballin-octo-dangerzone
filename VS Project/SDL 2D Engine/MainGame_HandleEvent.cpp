@@ -10,7 +10,7 @@ void MainGame::OnJoyButtonDown(Uint8 which, Uint8 button)
 	switch (button)
 	{
 	case 0:
-		Area::areaControl.GetPlayer()->Jump();
+		Area::Instance.GetPlayer()->Jump();
 		break;
 	case 7:
 		OnExit();
@@ -21,7 +21,7 @@ void MainGame::OnJoyButtonDown(Uint8 which, Uint8 button)
 
 void MainGame::OnJoyAxis(Uint8 which, Uint8 axis, Sint16 value)
 {
-	Player* player = Area::areaControl.GetPlayer();
+	Player* player = Area::Instance.GetPlayer();
 	if(axis == 0) // x axis
 	{
 		if(value < -7000)
@@ -41,7 +41,7 @@ void MainGame::OnJoyAxis(Uint8 which, Uint8 axis, Sint16 value)
 
 void MainGame::OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode)
 {
-	Player* player = Area::areaControl.GetPlayer();
+	Player* player = Area::Instance.GetPlayer();
 	switch (sym)
 	{
 	case SDLK_LEFT:
@@ -60,7 +60,7 @@ void MainGame::OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode)
 
 void MainGame::OnKeyUp(SDLKey sym, SDLMod mod, Uint16 unicode)
 {
-	Player* player = Area::areaControl.GetPlayer();
+	Player* player = Area::Instance.GetPlayer();
 	switch (sym)
 	{
 	case SDLK_LEFT:
