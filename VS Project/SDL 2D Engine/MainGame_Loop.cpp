@@ -12,7 +12,7 @@ void MainGame::Update()
 		Entity::currentEntities[i]->Update();
 	}
 
-	// handle collision events
+	// handle entity collision events
 	for(uint16_t i=0; i<EntityCol::entityColList.size(); i++)
 	{
 		Entity* entityA = EntityCol::entityColList[i].entityA;
@@ -20,8 +20,8 @@ void MainGame::Update()
 
 		if(entityA == NULL || entityB == NULL) continue;
 
-		entityA->OnCollision(entityB);
-		entityB->OnCollision(entityA);
+		entityA->OnEntityCollision(entityB);
+		entityB->OnEntityCollision(entityA);
 	}
 	EntityCol::entityColList.clear();
 

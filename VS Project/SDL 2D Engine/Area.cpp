@@ -176,8 +176,7 @@ Tile* Area::GetTile(int x, int y)
 	if(tileX >= areaSizeX || tileX < 0 || tileY >= areaSizeY || tileY < 0)
 		return NULL;
 	
-	uint8_t ID = tileX;
-	ID = ID + (areaSizeX * (y / TILE_SIZE));
+	uint16_t ID = tileX + (areaSizeX * tileY);
 
 	if(ID < 0 || ID >= tileList.size()) 
 		return NULL;

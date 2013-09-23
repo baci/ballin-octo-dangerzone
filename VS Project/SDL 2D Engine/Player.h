@@ -18,7 +18,7 @@ class Player : public Entity {
  
         void Animate();
  
-        void OnCollision(Entity* entity);
+        void OnEntityCollision(Entity* entity);
 
 		void Die();
 };

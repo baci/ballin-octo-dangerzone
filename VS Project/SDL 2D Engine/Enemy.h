@@ -26,7 +26,7 @@ public:
  
     void Animate();
  
-    void OnCollision(Entity* entity);
+    void OnEntityCollision(Entity* entity);
 };
 
 #endif

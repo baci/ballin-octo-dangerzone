@@ -14,7 +14,6 @@ Entity::Entity()
 	state = NO_STATE;
 
 	type = GENERIC;
-	flags = GRAVITY;
 
 	_speedX = 0;
 	_speedY = 0;
@@ -25,11 +24,6 @@ Entity::Entity()
 
 	_currentFrameCol = 0;
 	_currentFrameRow = 0;
-
-	_colX = 0;
-	_colY = 0;
-	_colWidth = 0;
-	_colHeight = 0;
 
 	_canJump = false;
 }
@@ -57,17 +51,15 @@ void Entity::Update()
 	if(state == DEAD)
 		return;
 
-	// standing
+	// calculate movement speed...
 	if(state != MOVE_LEFT && state != MOVE_RIGHT)
 		StopMove();
-	
-	if(state == MOVE_LEFT)
+	else if(state == MOVE_LEFT)
 		_accelX = -0.5;
 	else if(state == MOVE_RIGHT)
 		_accelX = 0.5;
 
-	if(flags & GRAVITY)
-		_accelY = 0.75f;
+	_accelY = 0.75f;
 
 	_speedX += _accelX * GameTimer::FPSControl.GetSpeedFactor();
 	_speedY += _accelY * GameTimer::FPSControl.GetSpeedFactor();
@@ -108,7 +100,7 @@ void Entity::Animate()
 		animControl.OnAnimate();
 }
 
-void Entity::OnCollision(Entity* entity)
+void Entity::OnEntityCollision(Entity* entity)
 {
 	// purely virtual
 }
@@ -124,7 +116,7 @@ void Entity::OnMove(float moveX, float moveY)
 
 	_canJump = false;
 
-	// position of where we WANT to go in the next iteration of the loop below
+	// position of where we WANT to go in the NEXT iteration of the loop below
 	float newX = 0;
 	float newY = 0;
 
@@ -134,49 +126,39 @@ void Entity::OnMove(float moveX, float moveY)
 
 	if(moveX != 0)
 	{
-		if(moveX >= 0)	newX = GameTimer::FPSControl.GetSpeedFactor();
-		else			newX = -GameTimer::FPSControl.GetSpeedFactor();
+		newX = GameTimer::FPSControl.GetSpeedFactor();
+		if(moveX < 0)	newX *= -1;
 	}
 	if(moveY != 0)
 	{
-		if(moveY >= 0)	newY = GameTimer::FPSControl.GetSpeedFactor();
-		else			newY = -GameTimer::FPSControl.GetSpeedFactor();
+		newY = GameTimer::FPSControl.GetSpeedFactor();
+		if(moveY < 0)	newY *= -1;
 	}
 
-	// actual movement while checking for collisions
+	// calculate actual movement while checking for collisions
 	while(true)
 	{
-		// ghost mode - entity doesn't care about collisions, but sends events to other entities
-		if(flags & GHOST)
-		{
-			
-			IsPositionValid((int)(x+newX), (int)(y+newY)); // called for collision on other entities
+		// move or stop x movement on collision on the x axis
+		if(IsPositionValid((int)(x+newX), (int)(y)))
 			x += newX;
+		else
+			_speedX = 0;
+
+		// move or stop y movement on collision on the y axis
+		if(IsPositionValid((int)(x), (int)(y+newY)))
 			y += newY;
-		}
 		else
 		{
-			// move or stop x movement on collision on the x axis
-			if(IsPositionValid((int)(x+newX), (int)(y)))
-				x += newX;
-			else
-				_speedX = 0;
+			if(moveY > 0)
+				_canJump = true;
 
-			// move or stop y movement on collision on the y axis
-			if(IsPositionValid((int)(x), (int)(y+newY)))
-				y += newY;
-			else
-			{
-				if(moveY > 0)
-					_canJump = true;
-
-				_speedY = 0;
-			}
+			_speedY = 0;
 		}
 
 		moveX += -newX;
 		moveY += -newY;
 
+		// break loop on collision on x/y axis
 		if(newX > 0 && moveX <= 0) newX = 0;
 		else if(newX < 0 && moveX >= 0) newX = 0;
 		else if(moveX == 0) newX = 0;
@@ -211,7 +193,7 @@ void Entity::StopMove()
 	returns true if entity collides with object of the specified bounds
 	working with rectangular collision boxes
 */
-bool Entity::Collides(int oX, int oY, int oW, int oH)
+bool Entity::Collides(int otherX, int otherY, int otherWidth, int otherHeight)
 {
 	// bounds of the two collision boxes...
 	int left1, left2;
@@ -219,17 +201,14 @@ bool Entity::Collides(int oX, int oY, int oW, int oH)
 	int top1, top2;
 	int bottom1, bottom2;
 
-	int tX = (int)x + _colX;
-	int tY = (int)y + _colY;
-
-	left1 = tX;
-	left2 = oX;
-	right1 = left1 + width - 1 - _colWidth;
-	right2 = oX + oW - 1;
-	top1 = tY;
-	top2 = oY;
-	bottom1 = top1 + height - 1 - _colHeight;
-	bottom2 = oY + oH - 1;
+	left1 = (int)x;
+	left2 = otherX;
+	right1 = left1 + width - 1;
+	right2 = otherX + otherWidth - 1;
+	top1 = (int)y;
+	top2 = otherY;
+	bottom1 = top1 + height - 1;
+	bottom2 = otherY + otherHeight - 1;
 
 	// no collision if first object is out of range of the second object
 	if(bottom1 < top2) return false;
@@ -241,18 +220,19 @@ bool Entity::Collides(int oX, int oY, int oW, int oH)
 }
 
 /**
-	newX, newY: position of where I want to move next
+	Checking whether entity can move to absolute position newX, newY.
 */
 bool Entity::IsPositionValid(int newX, int newY)
 {
 	bool ret = true;
 
-	int startX = (newX + _colX) / TILE_SIZE;
-	int startY = (newY + _colY) / TILE_SIZE;
-	int endX = ((newX + _colX) + width - _colWidth - 1) / TILE_SIZE;
-	int endY = ((newY + _colY) + height - _colHeight - 1) / TILE_SIZE;
+	// (rounded) range of all tileIds that the entity is over
+	int startX = floor(newX / TILE_SIZE);
+	int startY = floor(newY / TILE_SIZE);
+	int endX = ceil((newX + width - 1) / TILE_SIZE);
+	int endY = ceil((newY + height - 1) / TILE_SIZE);
 
-	// check for collision with map (getting all tileIds that the entity is over)
+	// check for collision with map
 	for(int iY = startY; iY <= endY; iY++)
 	{
 		for(int iX = startX; iX <= endX; iX++)
@@ -263,13 +243,9 @@ bool Entity::IsPositionValid(int newX, int newY)
 	}
 
 	// check for collision with entity
-	if(flags & MAPONLY) ;
-	else
+	for(uint8_t i=0; i<currentEntities.size(); i++)
 	{
-		for(uint8_t i=0; i<currentEntities.size(); i++)
-		{
-			if(IsPositionValidEntity(currentEntities[i], newX, newY) == false) ret = false;
-		}
+		if(IsPositionValidEntity(currentEntities[i], newX, newY) == false) ret = false;
 	}
 
 	return ret;
@@ -277,7 +253,7 @@ bool Entity::IsPositionValid(int newX, int newY)
 
 bool Entity::IsPositionValidTile(Tile* tile)
 {
-	if(tile == NULL) return true;
+	if(tile == NULL) return true; // fall out of world
 
 	if(tile->TypeID == TILE_TYPE_BLOCK) return false;
 
@@ -286,8 +262,8 @@ bool Entity::IsPositionValidTile(Tile* tile)
 
 bool Entity::IsPositionValidEntity(Entity* entity, int newX, int newY)
 {
-	if(this != entity && entity != NULL && entity->flags ^ MAPONLY && entity->IsDead() == false &&
-		entity->Collides(newX + _colX, newY + _colY, width - _colWidth, height - _colHeight) == true)
+	if(this != entity && entity != NULL && entity->IsDead() == false &&
+		entity->Collides(newX, newY, width, height) == true)
 	{
 		EntityCol entityCol;
 		entityCol.entityA = this;

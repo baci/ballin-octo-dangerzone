@@ -60,7 +60,7 @@ void Enemy::Animate()
     Entity::Animate();
 }
  
-void Enemy::OnCollision(Entity* entity)
+void Enemy::OnEntityCollision(Entity* entity)
 {
 	if(entity->IsPlayer() && (entity->y + height < y))
 		Die();

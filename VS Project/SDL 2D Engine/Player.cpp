@@ -39,7 +39,7 @@ void Player::Animate()
     Entity::Animate();
 }
  
-void Player::OnCollision(Entity* entity) 
+void Player::OnEntityCollision(Entity* entity) 
 {
 	if(entity->y <= y + height)
 		Die();

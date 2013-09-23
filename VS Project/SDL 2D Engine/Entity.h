@@ -17,14 +17,6 @@ enum ENTITY_TYPE
 	PLAYER
 };
 
-enum ENTITY_FLAG
-{
-	NO_FLAG = 0,
-	GRAVITY = 0x00000001,	// entity affected by gravity
-	GHOST = 0x00000002,		// entity can walk through walls
-	MAPONLY = 0x00000004	// entity only collides with map (not with other entities)
-};
-
 enum ENTITY_STATE
 {
 	NO_STATE = 0,
@@ -52,7 +44,6 @@ public:
 	// entity properties
 	ENTITY_STATE	state;
 	ENTITY_TYPE		type;
-	ENTITY_FLAG		flags; // flags for special properties of entity.
 
 	// movement max. values (pixel per seconds)
 	float	maxSpeedX;
@@ -73,12 +64,6 @@ protected:
 	int		_currentFrameRow;
 	int		_framesAmount;
 
-	// collision offset values
-	int		_colX;
-	int		_colY;
-	int		_colWidth;
-	int		_colHeight;
-
 	bool	_canJump;
 
 public:
@@ -93,8 +78,9 @@ public:
 	virtual void Update();
 	virtual void Render(SDL_Surface* surfDisplay);
 	virtual void Cleanup();
+
 	virtual void Animate();
-	virtual void OnCollision(Entity* entity);
+	virtual void OnEntityCollision(Entity* entity);
 	virtual void Die();
 
 	bool IsDead(){return state == DEAD;}
