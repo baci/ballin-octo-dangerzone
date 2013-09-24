@@ -13,11 +13,6 @@ Area::Area()
 	areaBackground = NULL;
 }
 
-Player* Area::GetPlayer()
-{
-	return player;
-}
-
 /*
 parsing the map data from the specified file.
 return true on success
@@ -70,27 +65,17 @@ bool Area::OnLoad(char* file)
 	if((areaBackground = ExtendedSurface::OnLoad(backgroundFile)) == NULL)
 		return false;
 
-	// load the player sprite file and initialize player
-	char playerSpriteFile[1000];
-	int playerSpriteWidth = 0;
-	int playerSpriteHeigth = 0;
-	int playerSpriteFPS = 0;
+	// initialize player
 	int playerPosX = 0;
 	int playerPosY = 0;
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
-	fscanf_s(fileHandle, "%s ", playerSpriteFile);
-	fscanf_s(fileHandle, "%i:%i ", &playerSpriteWidth, &playerSpriteHeigth);
-	fscanf_s(fileHandle, "%i ", &playerSpriteFPS);
 	fscanf_s(fileHandle, "%i:%i\n", &playerPosX, &playerPosY);
-	player = new Player();
-	if(player->Load(playerSpriteFile, playerSpriteWidth, playerSpriteHeigth, playerSpriteFPS) == false)
-		return false;
-	player->Spawn((float)playerPosX, (float)playerPosY);
-	Entity::currentEntities.push_back(player);
+	GameData::Instance.GetPlayer()->Spawn(playerPosX, playerPosY);
+	Entity::currentEntities.push_back(GameData::Instance.GetPlayer());
 	
 	// set camera target to player
-	Camera::Instance.targetMode = TARGET_MODE_FOLLOW;
-	Camera::Instance.SetTarget(player);
+	Camera::Instance.targetMode = GameData::Instance.IsCenteredCameraMode() ? TARGET_MODE_CENTER : TARGET_MODE_FOLLOW;
+	Camera::Instance.SetTarget(GameData::Instance.GetPlayer());
 
 	// load the enemy sprite files and initialize enemies
 	int enemyAmount = 0;
@@ -114,8 +99,7 @@ bool Area::OnLoad(char* file)
 		if(enemy->Load(enemySpriteFile, enemySpriteWidth, enemySpriteHeight, enemySpriteFPS) == false)
 			return false;
 
-		enemy->x = (float)enemyPosX;
-		enemy->y = (float)enemyPosY;
+		enemy->Spawn(enemyPosX, enemyPosY);
 		Enemy::currentEntities.push_back(enemy);
 	}
 	
@@ -174,7 +158,6 @@ Tile* Area::GetTile(int x, int y)
 	int tileX = x / TILE_SIZE;
 	int tileY = y / TILE_SIZE;
 
-	// TODO so there is the fucking bug
 	if(tileX >= areaSizeX || tileX < 0 || tileY >= areaSizeY || tileY < 0)
 		return NULL;
 	

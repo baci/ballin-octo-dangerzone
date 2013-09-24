@@ -23,10 +23,10 @@
 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 6:1 
 # Background File Path
 whiteBackground.bmp
-# player spritefile (bounds x:y) FPS (start position x:y (pixels))
-harry.png 48:65 3 10:20
+# player startposition x:y (pixels)
+10:20
 # enemy amount
 2
-# format: spritefile (bounds x:y) FPS (start position x:y (pixels))
+# format: spritefile (bounds x:y) (amount of frames) (start position x:y (pixels))
 draco.png 48:65 3 600:130
 draco.png 48:65 3 150:130

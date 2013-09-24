@@ -13,6 +13,8 @@ void MainGame::Cleanup()
 
 	Area::Instance.OnCleanup();
 
+	GameData::Instance.OnCleanup();
+
 	SDL_FreeSurface(_debugMessage);
 	TTF_CloseFont( _debugFont );
     //Quit SDL_ttf

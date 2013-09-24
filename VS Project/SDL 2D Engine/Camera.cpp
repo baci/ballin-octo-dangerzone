@@ -7,7 +7,7 @@ Camera::Camera()
 {
 	_x = _y = 0;
 	target = NULL;
-	targetMode = TARGET_MODE_FOLLOW;
+	targetMode = TARGET_MODE_NORMAL;
 	followThreshold = 0.8f;
 }
 

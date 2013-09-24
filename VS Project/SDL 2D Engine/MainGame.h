@@ -16,6 +16,7 @@ Author: Till Riemer
 #include "define.h"
 #include "OSEventHandler.h"
 #include "ExtendedSurface.h"
+#include "GameData.h"
 #include "Entity.h"
 #include "Area.h"
 #include "Camera.h"

@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <vector>
 
+#include "GameData.h"
 #include "Tile.h"
 #include "Camera.h"
 #include "ExtendedSurface.h"
@@ -25,15 +26,11 @@ private:
 	std::vector<Tile> tileList;
 	SDL_Surface*	areaBackground;
 
-	Player* player;
-
 public:
 	Area();
 	bool OnLoad(char* file);
 	void OnRender(SDL_Surface* surfDisplay, int cameraX, int cameraY);
 	void OnCleanup();
-
-	Player* GetPlayer();
 
 	Tile* GetTile(int x, int y);
 };

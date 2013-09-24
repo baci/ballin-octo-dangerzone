@@ -66,6 +66,10 @@ protected:
 
 	bool	_canJump;
 
+	// position to respawn on death
+	float	_respawnX;
+	float	_respawnY;
+
 public:
 	Entity();
 
@@ -82,6 +86,9 @@ public:
 	virtual void Animate();
 	virtual void OnEntityCollision(Entity* entity);
 	virtual void Die();
+
+	void Spawn(float posX, float posY);
+	void Respawn();
 
 	bool IsDead(){return state == DEAD;}
 	bool IsPlayer(){return type == PLAYER;}

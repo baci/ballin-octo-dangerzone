@@ -19,6 +19,8 @@ void Enemy::Update()
 {
 	if(state == DEAD)
 		return;
+	if(state == NO_STATE)
+		_walkDir = WALKDIR_LEFT;
 	
 	// move in one direction as long as possible
 	if(_walkDir == WALKDIR_LEFT)
@@ -62,8 +64,16 @@ void Enemy::Animate()
  
 void Enemy::OnEntityCollision(Entity* entity)
 {
-	if(entity->IsPlayer() && (entity->y + height < y))
-		Die();
+	if(entity->IsPlayer())
+	{
+		if(entity->y + entity->height <= y)
+		{
+ 			Die();
+			entity->Jump();
+		}
+		else
+	  		entity->Die();
+	}
 	else
 		ChangeDirection();
 }

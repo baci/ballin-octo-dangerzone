@@ -7,11 +7,11 @@ Entity::Entity()
 {
 	surfEntity = NULL;
 
-	x = 0;
-	y = 0;
 	width = 0;
 	height = 0;
-	state = NO_STATE;
+	//x = 0;
+	//y = 0;
+	state = DEAD;
 
 	type = GENERIC;
 
@@ -105,6 +105,20 @@ void Entity::OnEntityCollision(Entity* entity)
 	// purely virtual
 }
 
+void Entity::Spawn(float posX, float posY)
+{
+	x = _respawnX = posX;
+	y = _respawnY = posY;
+	state = NO_STATE;
+}
+
+void Entity::Respawn()
+{
+	x = _respawnX;
+	y = _respawnY;
+	state = NO_STATE;
+}
+
 void Entity::Die()
 {
 	state = DEAD;
@@ -196,25 +210,24 @@ void Entity::StopMove()
 bool Entity::Collides(int otherX, int otherY, int otherWidth, int otherHeight)
 {
 	// bounds of the two collision boxes...
-	int left1, left2;
-	int right1, right2;
-	int top1, top2;
-	int bottom1, bottom2;
+	int myLeft, otherLeft, myRight, otherRight;
+	int myTop, otherTop, myBottom, otherBottom;
 
-	left1 = (int)x;
-	left2 = otherX;
-	right1 = left1 + width - 1;
-	right2 = otherX + otherWidth - 1;
-	top1 = (int)y;
-	top2 = otherY;
-	bottom1 = top1 + height - 1;
-	bottom2 = otherY + otherHeight - 1;
+	myLeft = (int)x;
+	otherLeft = otherX;
+	myRight = myLeft + width - 1;
+	otherRight = otherLeft + otherWidth - 1;
+	myTop = (int)y;
+	otherTop = otherY;
+	myBottom = myTop + height - 1;
+	otherBottom = otherTop + otherHeight - 1;
+
 
 	// no collision if first object is out of range of the second object
-	if(bottom1 < top2) return false;
-	else if(top1 > bottom2) return false;
-	else if(right1 < left2) return false;
-	else if(left1 > right2) return false;
+	if(myBottom < otherTop)			return false;
+	else if(myTop > otherBottom)	return false;
+	else if(myRight < otherLeft)	return false;
+	else if(myLeft > otherRight)	return false;
 
 	return true;
 }
@@ -227,20 +240,37 @@ bool Entity::IsPositionValid(int newX, int newY)
 	bool ret = true;
 
 	// (rounded) range of all tileIds that the entity is over
-	int startX = floor(newX / TILE_SIZE);
-	int startY = floor(newY / TILE_SIZE);
-	int endX = ceil((newX + width - 1) / TILE_SIZE);
-	int endY = ceil((newY + height - 1) / TILE_SIZE);
+	int startX = (int)floor(newX / TILE_SIZE);
+	int startY = (int)floor(newY / TILE_SIZE);
+	int endX = (int)ceil((newX + width - 1) / TILE_SIZE);
+	int endY = (int)ceil((newY + height - 1) / TILE_SIZE);
 
 	// check for collision with map
-	//for(int iY = startY; iY <= endY; iY++)
-	//{
-		for(int iX = startX; iX <= endX; iX++)
+	if(GameData::Instance.IsFullMapCollision())
+	{
+		// check for any map collision
+		for(int iY = startY; iY <= endY; iY++)
 		{
-			Tile* tile = Area::Instance.GetTile(iX * TILE_SIZE, endY * TILE_SIZE);
-			if(IsPositionValidTile(tile) == false) ret = false;
+			for(int iX = startX; iX <= endX; iX++)
+			{
+				Tile* tile = Area::Instance.GetTile(iX * TILE_SIZE, iY * TILE_SIZE);
+				if(IsPositionValidTile(tile) == false) ret = false;
+			}
 		}
-	//}
+	}
+	else
+	{
+		// check only for map tiles below the entity
+		if(newY > y)
+		{
+			for(int iX = startX; iX <= endX; iX++)
+			{
+				Tile* tile = Area::Instance.GetTile(iX * TILE_SIZE, endY * TILE_SIZE);
+				if(IsPositionValidTile(tile) == false) ret = false;
+			}
+		}
+	}
+	
 
 	// check for collision with entity
 	for(uint8_t i=0; i<currentEntities.size(); i++)

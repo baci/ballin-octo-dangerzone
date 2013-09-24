@@ -13,19 +13,19 @@ bool Player::Load(char* file, int width, int height, int maxFrames)
  
     return true;
 }
- 
-void Player::Spawn(float posX, float posY)
-{
-	x = _respawnX = posX;
-	y = _respawnY = posY;
-	state = NO_STATE;
-}
 
 void Player::Die()
 {
 	Entity::Die();
 
-	Spawn(_respawnX, _respawnY);
+	// clear pending collisions
+	EntityCol::entityColList.clear();
+
+	// respawn all entities on the map
+	for(uint16_t i=0; i<(Entity::currentEntities.size()); i++)
+	{
+		Entity::currentEntities.at(i)->Respawn();
+	}
 }
 
 void Player::Animate()
@@ -41,8 +41,5 @@ void Player::Animate()
  
 void Player::OnEntityCollision(Entity* entity) 
 {
-	if(entity->y <= y + height)
-		Die();
-	else
-		Jump();
+	
 }

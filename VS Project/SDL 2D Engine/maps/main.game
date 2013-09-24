@@ -1,4 +1,4 @@
-1.area
-2.area
-
+# player spritefile (bounds x:y) (amount of frames)
+harry.png 48:65 3
+# death animation spritefile (bounds x:y) (amount of frames)
 explosion.png 96:96 15

@@ -66,6 +66,9 @@
     <ClCompile Include="MainGame_Render.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="GameData.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Define.h">

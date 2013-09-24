@@ -37,6 +37,9 @@ bool MainGame::Init()
 	_eventHandler->OnKeyDownDelegate.subscribe(OnKeyDown);
 	_eventHandler->OnKeyUpDelegate.subscribe(OnKeyUp);
 
+	if(GameData::Instance.OnLoad("./maps/main.game") == false)
+		return false;
+
 	if(Area::Instance.OnLoad("./maps/1.area") == false)
 		return false;
 
