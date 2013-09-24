@@ -18,13 +18,18 @@ void Player::Die()
 {
 	Entity::Die();
 
-	// clear pending collisions
+	// clear pending collisions and respawn after animation
 	EntityCol::entityColList.clear();
+}
 
-	// respawn all entities on the map
-	for(uint16_t i=0; i<(Entity::currentEntities.size()); i++)
+void Player::Update()
+{
+	Entity::Update();
+
+	if(y/TILE_SIZE > Area::Instance.areaSizeY)
 	{
-		Entity::currentEntities.at(i)->Respawn();
+		Die();
+		Entity::RespawnAll();
 	}
 }
 
@@ -41,5 +46,13 @@ void Player::Animate()
  
 void Player::OnEntityCollision(Entity* entity) 
 {
+	if(entity->y <= y + height)
+	{
+ 		Die();
+
+		deathAnimation->Play(&Entity::RespawnAll, (int)x, (int)y, width, height);
+	}
+	else
+	  	Jump();
 	
 }

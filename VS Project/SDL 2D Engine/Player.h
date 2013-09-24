@@ -9,6 +9,8 @@ class Player : public Entity {
         Player();
 
 		bool Load(char* file, int width, int height, int maxFrames);
+
+		void Update();
  
         void Animate();
  

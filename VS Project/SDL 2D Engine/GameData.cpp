@@ -14,9 +14,24 @@ Player* GameData::GetPlayer()
 	return _player;
 }
 
-Entity* GameData::GetDieAnimation()
+char* GameData::GetDieAnimationFile()
 {
-	return _dieAnimation;
+	return _dieAnimationFile;
+}
+
+int	GameData::GetDieAnimationWidth()
+{
+	return _dieAnimationWidth;
+}
+
+int	GameData::GetDieAnimationHeigth()
+{
+	return _dieAnimationHeigth;
+}
+
+int	GameData::GetDieAnimationFrames()
+{
+	return _dieAnimationFrames;
 }
 
 bool GameData::IsFullMapCollision()
@@ -51,27 +66,19 @@ bool GameData::OnLoad(char* file)
 	if(_player->Load(playerSpriteFile, playerSpriteWidth, playerSpriteHeigth, playerSpriteFPS) == false)
 		return false;
 
-	// load the die animation sprite file
-	// TODO: make a one-time-animation class
-	char dieAnimSpriteFile[1000];
-	int dieAnimSpriteWidth = 0;
-	int dieAnimSpriteHeigth = 0;
-	int dieAnimSpriteFPS = 0;
+	// parse the die animation sprite data
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
-	fscanf_s(fileHandle, "%s ", dieAnimSpriteFile);
-	fscanf_s(fileHandle, "%i:%i ", &dieAnimSpriteWidth, &dieAnimSpriteHeigth);
-	fscanf_s(fileHandle, "%i ", &dieAnimSpriteFPS);
-	_dieAnimation = new Entity();
-	if(_dieAnimation->Load(dieAnimSpriteFile, dieAnimSpriteWidth, dieAnimSpriteHeigth, dieAnimSpriteFPS) == false)
-		return false;
+	fscanf_s(fileHandle, "%s ", _dieAnimationFile);
+	fscanf_s(fileHandle, "%i:%i ", &_dieAnimationWidth, &_dieAnimationHeigth);
+	fscanf_s(fileHandle, "%i ", &_dieAnimationFrames);
 
-	// load the collision setting
+	// parse the collision setting
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	int fullCollision = 0;
 	fscanf_s(fileHandle, "%i ", &fullCollision);
 	_fullMapCollision = (fullCollision == 1);
 
-	// load the camera setting
+	// parse the camera setting
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	int centeredCamera = 0;
 	fscanf_s(fileHandle, "%i ", &centeredCamera);

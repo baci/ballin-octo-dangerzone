@@ -119,6 +119,15 @@ void Entity::Respawn()
 	state = NO_STATE;
 }
 
+void Entity::RespawnAll()
+{
+	for(int i=0; i<currentEntities.size(); i++)
+	{
+		currentEntities.at(i)->Respawn();
+	}
+	Camera::Instance.CenterOnTarget();
+}
+
 void Entity::Die()
 {
 	state = DEAD;

@@ -2,12 +2,12 @@
 
 SpriteAnimator::SpriteAnimator()
 {
-	currentFrame = 0;
+	_currentFrame = 0;
 	maxFrames = 0;
-	frameInc = 1;
+	_frameInc = 1;
 
-	frameRate = 200; 
-	oldTime = 0;
+	_frameRate = 200; 
+	_oldTime = 0;
 
 	oscillate = false;
 }
@@ -16,33 +16,33 @@ void SpriteAnimator::OnAnimate()
 {
 	
 	// check if frame time passed
-	if(oldTime + frameRate > SDL_GetTicks())
+	if(_oldTime + _frameRate > SDL_GetTicks())
 		return;
 
-	unsigned long frameCounter = (SDL_GetTicks() - oldTime)/frameRate;
+	unsigned long frameCounter = (SDL_GetTicks() - _oldTime)/_frameRate;
 
-	oldTime = SDL_GetTicks();
+	_oldTime = SDL_GetTicks();
 
 	while(frameCounter)
 	{
 		// increment frame
-		currentFrame += frameInc;
+		_currentFrame += _frameInc;
 		if(oscillate)
 		{
-			if(frameInc>0)
+			if(_frameInc > 0)
 			{
-				if(currentFrame >= maxFrames)
-					frameInc = -frameInc;
+				if(_currentFrame >= maxFrames)
+					_frameInc = -_frameInc;
 			} else
 			{
-				if(currentFrame <= 0)
-					frameInc = -frameInc;
+				if(_currentFrame <= 0)
+					_frameInc = -_frameInc;
 			}
 		}
 		else
 		{
-			if(currentFrame >= maxFrames)
-				currentFrame = 0;
+			if(_currentFrame >= maxFrames)
+				_currentFrame = 0;
 		}
 
 		frameCounter--;
@@ -51,16 +51,16 @@ void SpriteAnimator::OnAnimate()
 
 void SpriteAnimator::SetFrameRate(int rate)
 {
-	frameRate = rate;
+	_frameRate = rate;
 }
 
 void SpriteAnimator::SetCurrentFrame(int frame)
 {
 	if(frame < 0 || frame >= maxFrames) return;
-	currentFrame = frame;
+	_currentFrame = frame;
 }
 
 int SpriteAnimator::GetCurrentFrame()
 {
-	return currentFrame;
+	return _currentFrame;
 }

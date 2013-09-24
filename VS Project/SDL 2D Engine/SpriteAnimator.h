@@ -6,11 +6,11 @@
 class SpriteAnimator {
 
 private:
-	int currentFrame;
-	int frameInc;
+	int _currentFrame;
+	int _frameInc;
 
-	int frameRate; // DELAY in milliseconds
-	long oldTime; // time passed since last animation frame
+	int _frameRate; // DELAY in milliseconds
+	long _oldTime; // time passed since last animation frame
 
 public:
 	int maxFrames;

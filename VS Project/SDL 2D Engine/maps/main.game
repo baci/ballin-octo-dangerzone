@@ -2,3 +2,7 @@
 harry.png 48:65 3
 # death animation spritefile (bounds x:y) (amount of frames)
 explosion.png 96:96 15
+# map collision detection mode: 1 for full collision, 0 for checking only the ground below the entity
+0
+# camera mode: 1 for centered, 0 for following
+0

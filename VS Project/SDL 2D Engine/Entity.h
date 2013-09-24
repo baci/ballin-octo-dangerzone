@@ -8,6 +8,7 @@
 #include "SpriteAnimator.h"
 #include "GameTimer.h"
 #include "ExtendedSurface.h"
+#include "OneTimeAnimation.h"
 
 class CApp;
 
@@ -49,6 +50,8 @@ public:
 	float	maxSpeedX;
 	float	maxSpeedY;
 
+	OneTimeAnimation *deathAnimation;
+
 protected:
 	SpriteAnimator	animControl;
 	SDL_Surface*	surfEntity;
@@ -89,6 +92,8 @@ public:
 
 	void Spawn(float posX, float posY);
 	void Respawn();
+
+	static void RespawnAll();
 
 	bool IsDead(){return state == DEAD;}
 	bool IsPlayer(){return type == PLAYER;}

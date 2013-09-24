@@ -19,9 +19,10 @@ class Area{
 public:
 	static Area		Instance;
 
-private:
 	int				areaSizeX;
 	int				areaSizeY;
+
+private:
 	SDL_Surface*	surfTileset;
 	std::vector<Tile> tileList;
 	SDL_Surface*	areaBackground;

@@ -1,7 +1,7 @@
 ballin-octo-dangerzone
 ======================
 
-Copyright Till Riemer 2013, till.riemer@gmail.com
+Copyright Till Riemer 2013, till.riemer[ATT]gmail.com
 License: CC-NonCommercial
 
 2d platformer game engine using C++/SDL.

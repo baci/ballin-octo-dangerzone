@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameData.cpp" />
+    <ClCompile Include="OneTimeAnimation.cpp" />
     <ClCompile Include="SpriteAnimator.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MainGame_Cleanup.cpp" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameData.h" />
+    <ClInclude Include="OneTimeAnimation.h" />
     <ClInclude Include="SpriteAnimator.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Area.h" />

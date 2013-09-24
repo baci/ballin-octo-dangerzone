@@ -27,6 +27,12 @@ int Camera::GetY()
 	return _y;
 }
 
+void Camera::CenterOnTarget()
+{
+	_x = (int)(this->target->x - (WWIDTH / 2));
+	_y = (int)(this->target->y - (WHEIGHT / 2));
+}
+
 void Camera::Update()
 {
 	if(target != NULL)

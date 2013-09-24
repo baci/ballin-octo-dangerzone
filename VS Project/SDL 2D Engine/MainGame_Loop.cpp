@@ -7,9 +7,13 @@ void MainGame::Update()
 	// handle entities
 	for(uint16_t i=0; i<Entity::currentEntities.size(); i++)
 	{
-		if(!Entity::currentEntities[i]) continue;
+		Entity *curEntity = Entity::currentEntities[i];
+		if(!curEntity) continue;
 
-		Entity::currentEntities[i]->Update();
+		if(curEntity->state == DEAD && curEntity->deathAnimation != NULL)
+			curEntity->deathAnimation->Update();
+		else
+			curEntity->Update();
 	}
 
 	// handle entity collision events

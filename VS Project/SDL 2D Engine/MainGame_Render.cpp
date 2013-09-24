@@ -9,9 +9,13 @@ void MainGame::Render()
 	// render entities
 	for(uint16_t i=0; i<Entity::currentEntities.size(); i++)
 	{
-		if(!Entity::currentEntities[i]) continue;
+		Entity *curEntity = Entity::currentEntities[i];
+		if(!curEntity) continue;
 
-		Entity::currentEntities[i]->Render(_surfDisplay);
+		if(curEntity->state == DEAD && curEntity->deathAnimation != NULL)
+			curEntity->deathAnimation->Render(_surfDisplay);
+		else
+			curEntity->Render(_surfDisplay);
 	}
 
 	// render debug text

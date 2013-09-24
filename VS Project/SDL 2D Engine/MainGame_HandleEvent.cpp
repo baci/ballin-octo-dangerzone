@@ -10,7 +10,8 @@ void MainGame::OnJoyButtonDown(Uint8 which, Uint8 button)
 	switch (button)
 	{
 	case 0:
-		GameData::Instance.GetPlayer()->Jump();
+		if(!GameData::Instance.GetPlayer()->IsDead())
+			GameData::Instance.GetPlayer()->Jump();
 		break;
 	case 7:
 		OnExit();
@@ -22,19 +23,22 @@ void MainGame::OnJoyButtonDown(Uint8 which, Uint8 button)
 void MainGame::OnJoyAxis(Uint8 which, Uint8 axis, Sint16 value)
 {
 	Player* player = GameData::Instance.GetPlayer();
-	if(axis == 0) // x axis
+	if(!player->IsDead())
 	{
-		if(value < -7000)
+		if(axis == 0) // x axis
 		{
-			player->state = MOVE_LEFT;
-		}
-		else if(value > 7000)
-		{
-			player->state = MOVE_RIGHT;
-		}
-		else
-		{
-			player->state = NO_STATE;
+			if(value < -7000)
+			{
+				player->state = MOVE_LEFT;
+			}
+			else if(value > 7000)
+			{
+				player->state = MOVE_RIGHT;
+			}
+			else
+			{
+				player->state = NO_STATE;
+			}
 		}
 	}
 }
@@ -42,32 +46,38 @@ void MainGame::OnJoyAxis(Uint8 which, Uint8 axis, Sint16 value)
 void MainGame::OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode)
 {
 	Player* player = GameData::Instance.GetPlayer();
-	switch (sym)
+	if(!player->IsDead())
 	{
-	case SDLK_LEFT:
-		player->state = MOVE_LEFT;
-		break;
-	case SDLK_RIGHT:
-		player->state = MOVE_RIGHT;
-		break;
-	case SDLK_SPACE:
-		player->Jump();
-		break;
-	default:
-		break;
+		switch (sym)
+		{
+		case SDLK_LEFT:
+			player->state = MOVE_LEFT;
+			break;
+		case SDLK_RIGHT:
+			player->state = MOVE_RIGHT;
+			break;
+		case SDLK_SPACE:
+			player->Jump();
+			break;
+		default:
+			break;
+		}
 	}
 }
 
 void MainGame::OnKeyUp(SDLKey sym, SDLMod mod, Uint16 unicode)
 {
 	Player* player = GameData::Instance.GetPlayer();
-	switch (sym)
+	if(!player->IsDead())
 	{
-	case SDLK_LEFT:
-	case SDLK_RIGHT:
-		player->state = NO_STATE;
-		break;
-	default:
-		break;
+		switch (sym)
+		{
+		case SDLK_LEFT:
+		case SDLK_RIGHT:
+			player->state = NO_STATE;
+			break;
+		default:
+			break;
+		}
 	}
 }

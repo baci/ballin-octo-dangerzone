@@ -70,10 +70,10 @@ bool Area::OnLoad(char* file)
 	int playerPosY = 0;
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fscanf_s(fileHandle, "%i:%i\n", &playerPosX, &playerPosY);
-	GameData::Instance.GetPlayer()->Spawn(playerPosX, playerPosY);
+	GameData::Instance.GetPlayer()->Spawn((float)playerPosX, (float)playerPosY);
 	Entity::currentEntities.push_back(GameData::Instance.GetPlayer());
 	
-	// set camera target to player
+	// set camera mode and target
 	Camera::Instance.targetMode = GameData::Instance.IsCenteredCameraMode() ? TARGET_MODE_CENTER : TARGET_MODE_FOLLOW;
 	Camera::Instance.SetTarget(GameData::Instance.GetPlayer());
 
@@ -99,8 +99,18 @@ bool Area::OnLoad(char* file)
 		if(enemy->Load(enemySpriteFile, enemySpriteWidth, enemySpriteHeight, enemySpriteFPS) == false)
 			return false;
 
-		enemy->Spawn(enemyPosX, enemyPosY);
+		enemy->Spawn((float)enemyPosX, (float)enemyPosY);
 		Enemy::currentEntities.push_back(enemy);
+	}
+
+	for(uint16_t i=0; i<Entity::currentEntities.size(); i++)
+	{
+		Entity *curEntity = Entity::currentEntities.at(i);
+		if(!curEntity) continue;
+
+		curEntity->deathAnimation = new OneTimeAnimation();
+		curEntity->deathAnimation->Load(GameData::Instance.GetDieAnimationFile(), GameData::Instance.GetDieAnimationWidth(), 
+			GameData::Instance.GetDieAnimationHeigth(), GameData::Instance.GetDieAnimationFrames());
 	}
 	
 	fclose(fileHandle);

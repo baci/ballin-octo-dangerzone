@@ -37,6 +37,11 @@ class Camera {
 		*/
 		void Update();
 
+		/*
+		immediately centers the camera on the target
+		*/
+		void CenterOnTarget();
+
 		int GetX();
 		int GetY();
  
