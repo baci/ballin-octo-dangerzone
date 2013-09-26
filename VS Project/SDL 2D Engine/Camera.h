@@ -16,13 +16,14 @@ class Camera {
     public:
         static Camera Instance;
 		int targetMode;
-		Entity* target;
-
-		float followThreshold; // threshold of screen border distance to follow target sprite
  
     private:
         int _x;
-        int _y;        
+        int _y;  
+
+		Entity* _target;
+		// threshold of screen border distance to follow target sprite
+		float _followThreshold; 
  
     public:
         Camera();
@@ -50,7 +51,10 @@ class Camera {
 		*/
 		void SetPos(int x, int y);
  
-        void SetTarget(Entity* _target);
+		/*
+		sets the target entity which the camera is following
+		*/
+        void SetTarget(Entity* target);
 };
  
 #endif

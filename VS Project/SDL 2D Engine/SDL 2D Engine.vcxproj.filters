@@ -42,12 +42,6 @@
     <ClCompile Include="Tile.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="ExtendedSurface.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityCol.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteAnimator.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -60,9 +54,6 @@
     <ClCompile Include="MainGame_Init.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="MainGame_Loop.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="MainGame_Render.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -70,6 +61,15 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="OneTimeAnimation.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityCollision.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGame_Update.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="SurfaceWrapper.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,9 +104,6 @@
     <ClInclude Include="Tile.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="ExtendedSurface.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="SpriteAnimator.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -114,6 +111,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="OneTimeAnimation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="SurfaceWrapper.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

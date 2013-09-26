@@ -2,8 +2,8 @@
 
 Enemy::Enemy()
 {
-	_walkDir = WALKDIR_RIGHT;
-	maxSpeedX = maxSpeedX / 2;
+	_walkDir = DIR_RIGHT;
+	_maxSpeedX = _maxSpeedX / 2;
 }
 
 bool Enemy::Load(char* file, int width, int height, int maxFrames)
@@ -20,25 +20,27 @@ void Enemy::Update()
 	if(state == DEAD)
 		return;
 	if(state == NO_STATE)
-		_walkDir = WALKDIR_LEFT;
+		_walkDir = DIR_LEFT;
 	
 	// move in one direction as long as possible
-	if(_walkDir == WALKDIR_LEFT)
+	if(_walkDir == DIR_LEFT)
 	{
-		if(!IsPositionValidTile(Area::Instance.GetTile((int)x-width, (int)y)) || IsPositionValidTile(Area::Instance.GetTile((int)x-width, (int)y+height))) 
-			_walkDir = WALKDIR_RIGHT;
+		if(!IsPositionValidTile(Area::Instance.GetTile((int)_x-_width, (int)_y)) 
+			|| IsPositionValidTile(Area::Instance.GetTile((int)_x-_width, (int)_y+_height))) 
+			_walkDir = DIR_RIGHT;
 	}
-	else if(_walkDir == WALKDIR_RIGHT)
+	else if(_walkDir == DIR_RIGHT)
 	{
-		if(!IsPositionValidTile(Area::Instance.GetTile((int)x+width, (int)y)) || IsPositionValidTile(Area::Instance.GetTile((int)x+width, (int)y+height))) 
-			_walkDir = WALKDIR_LEFT;
+		if(!IsPositionValidTile(Area::Instance.GetTile((int)_x+_width, (int)_y)) 
+			|| IsPositionValidTile(Area::Instance.GetTile((int)_x+_width, (int)_y+_height))) 
+			_walkDir = DIR_LEFT;
 	}
 	
-	if(_walkDir == WALKDIR_RIGHT)
+	if(_walkDir == DIR_RIGHT)
 	{
 		state = MOVE_RIGHT;
 	}
-	else if(_walkDir == WALKDIR_LEFT)
+	else if(_walkDir == DIR_LEFT)
 	{
 		state = MOVE_LEFT;
 	}
@@ -48,15 +50,15 @@ void Enemy::Update()
 
 void Enemy::ChangeDirection()
 {
-	_walkDir = _walkDir == WALKDIR_LEFT ? WALKDIR_RIGHT : WALKDIR_LEFT;
+	_walkDir = _walkDir == DIR_LEFT ? DIR_RIGHT : DIR_LEFT;
 }
  
 void Enemy::Animate()
 {
 	if(_speedX != 0) {
-        animControl.maxFrames = _framesAmount;
+        _animator.maxFrames = _framesAmount;
     }else{
-        animControl.maxFrames = 0;
+        _animator.maxFrames = 0;
     }
  
     Entity::Animate();
@@ -64,10 +66,10 @@ void Enemy::Animate()
  
 void Enemy::OnEntityCollision(Entity* entity)
 {
-	if(entity->IsPlayer() && (entity->y + entity->height <= y))
+	if(entity->IsPlayer() && (entity->GetY() + entity->GetHeight()*0.8 <= _y))
 	{
 		Die();
-		deathAnimation->Play((int)x, (int)y, width, height);
+		deathAnimation->Play((int)_x, (int)_y, _width, _height);
 	}
 	else
 		ChangeDirection();

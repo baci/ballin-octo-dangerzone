@@ -44,6 +44,6 @@ whiteBackground.bmp
 4
 # format: spritefile (bounds x:y) (amount of frames) (start position x:y (pixels))
 draco.png 48:65 3 620:130
-draco.png 48:65 3 150:130
-draco.png 48:65 3 620:600
-draco.png 48:65 3 150:600
+draco.png 48:65 3 300:130
+draco.png 48:65 3 620:620
+draco.png 48:65 3 150:620

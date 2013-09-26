@@ -9,21 +9,22 @@ private:
 	int _currentFrame;
 	int _frameInc;
 
-	int _frameRate; // DELAY in milliseconds
-	long _oldTime; // time passed since last animation frame
+	// delay in milliseconds
+	int _delayMs;
+	// time passed since last animation frame
+	long _oldTime; 
 
 public:
 	int maxFrames;
-	bool oscillate; // true: increase/decrease frames, false: loop
+	// true: increase/decrease frames, false: loop
+	bool oscillate; 
 
 	SpriteAnimator();
 
-	/*
-	animate one frame.
-	*/
+	// animate a single frame.
 	void OnAnimate();
 
-	void SetFrameRate(int rate);
+	void SetDelay(int delay);
 
 	void SetCurrentFrame(int frame);
 

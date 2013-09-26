@@ -15,7 +15,7 @@ Author: Till Riemer
 #include <SDL_ttf.h>
 #include "define.h"
 #include "OSEventHandler.h"
-#include "ExtendedSurface.h"
+#include "SurfaceWrapper.h"
 #include "GameData.h"
 #include "Entity.h"
 #include "Area.h"

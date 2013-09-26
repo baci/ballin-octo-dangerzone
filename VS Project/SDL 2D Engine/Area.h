@@ -7,7 +7,7 @@
 #include "GameData.h"
 #include "Tile.h"
 #include "Camera.h"
-#include "ExtendedSurface.h"
+#include "SurfaceWrapper.h"
 
 class Enemy;
 class Player;
@@ -19,21 +19,23 @@ class Area{
 public:
 	static Area		Instance;
 
-	int				areaSizeX;
-	int				areaSizeY;
-
 private:
-	SDL_Surface*	surfTileset;
-	std::vector<Tile> tileList;
-	SDL_Surface*	areaBackground;
+	SDL_Surface*	_tileset;
+	std::vector<Tile> _tileList;
+	SDL_Surface*	_areaBackground;
+
+	int				_areaSizeX;
+	int				_areaSizeY;
 
 public:
 	Area();
-	bool OnLoad(char* file);
-	void OnRender(SDL_Surface* surfDisplay, int cameraX, int cameraY);
-	void OnCleanup();
+	bool Load(char* file);
+	void Render(SDL_Surface* surfDisplay, int cameraX, int cameraY);
+	void Cleanup();
 
 	Tile* GetTile(int x, int y);
+	int GetAreaSizeX();
+	int GetAreaSizeY();
 };
 
 #endif

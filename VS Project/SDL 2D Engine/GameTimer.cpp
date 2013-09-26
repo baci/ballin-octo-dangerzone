@@ -4,32 +4,32 @@ GameTimer GameTimer::FPSControl;
 
 GameTimer::GameTimer()
 {
-	oldTime = 0;
-	lastTime = 0;
-	speedFactor = 0;
-	frames = 0;
-	numFrames = 0;
+	_oldTime = 0;
+	_lastTime = 0;
+	_speedFactor = 0;
+	_frames = 0;
+	_numFrames = 0;
 }
 
-void GameTimer::OnLoop()
+void GameTimer::Update()
 {
-	if(oldTime + 1000 < SDL_GetTicks())
+	if(_oldTime + 1000 < SDL_GetTicks())
 	{
-		oldTime = SDL_GetTicks();
-		numFrames = frames;
-		frames = 0;
+		_oldTime = SDL_GetTicks();
+		_numFrames = _frames;
+		_frames = 0;
 	}
 
-	speedFactor = ((SDL_GetTicks() - lastTime) / 1000.0f) * 32.0f;
+	_speedFactor = ((SDL_GetTicks() - _lastTime) / 1000.0f) * 32.0f;
 
-	lastTime = SDL_GetTicks();
-	frames++;
+	_lastTime = SDL_GetTicks();
+	_frames++;
 }
 
 int GameTimer::GetFPS(){
-	return numFrames;
+	return _numFrames;
 }
 
 float GameTimer::GetSpeedFactor(){
-	return speedFactor;
+	return _speedFactor;
 }

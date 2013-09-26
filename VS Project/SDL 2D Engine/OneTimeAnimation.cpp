@@ -13,10 +13,10 @@ bool OneTimeAnimation::Load(char* file, int width, int height, int maxFrames)
 	std::string fs = file;
 	std::string path = "./charsets/";
 	std::string filepath = path + fs;
-	if((_surfEntity = ExtendedSurface::OnLoad(const_cast<char*>(filepath.c_str()))) == NULL)
+	if((_surfEntity = SurfaceWrapper::Load(const_cast<char*>(filepath.c_str()))) == NULL)
 		return false;
 
-	ExtendedSurface::Transparent(_surfEntity, 255, 255, 255, false);
+	SurfaceWrapper::SetTransparency(_surfEntity, 255, 255, 255, false);
 
 	this->width = width;
 	this->height = height;
@@ -64,7 +64,7 @@ void OneTimeAnimation::Render(SDL_Surface* surfDisplay)
 {
 	if(_surfEntity == NULL || surfDisplay == NULL || _playing == false) return;
 
-	ExtendedSurface::OnDraw(surfDisplay, _surfEntity, 
+	SurfaceWrapper::Draw(surfDisplay, _surfEntity, 
 		_targetX-(width/2 - _targetW/2) - Camera::Instance.GetX(), _targetY-(height - _targetH) - Camera::Instance.GetY(), 
 		(_animator.GetCurrentFrame())*width, 0, width, height);
 }

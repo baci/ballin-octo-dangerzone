@@ -5,22 +5,22 @@ std::vector<Entity*> Entity::currentEntities;
 
 Entity::Entity()
 {
-	surfEntity = NULL;
+	_entitySprite = NULL;
 
-	width = 0;
-	height = 0;
-	//x = 0;
-	//y = 0;
+	_width = 0;
+	_height = 0;
+	//_x = 0;
+	//_y = 0;
 	state = DEAD;
 
-	type = GENERIC;
+	_type = COMMON;
 
 	_speedX = 0;
 	_speedY = 0;
 	_accelX = 0;
 	_accelY = 0;
-	maxSpeedX = 10;
-	maxSpeedY = 10;
+	_maxSpeedX = 10;
+	_maxSpeedY = 10;
 
 	_currentFrameCol = 0;
 	_currentFrameRow = 0;
@@ -32,16 +32,16 @@ bool Entity::Load(char* file, int width, int height, int maxFrames)
 	std::string fs = file;
 	std::string path = "./charsets/";
 	std::string filepath = path + fs;
-	if((surfEntity = ExtendedSurface::OnLoad(const_cast<char*>(filepath.c_str()))) == NULL)
+	if((_entitySprite = SurfaceWrapper::Load(const_cast<char*>(filepath.c_str()))) == NULL)
 		return false;
 
-	ExtendedSurface::Transparent(surfEntity, 255, 255, 255, false);
+	SurfaceWrapper::SetTransparency(_entitySprite, 255, 255, 255, false);
 
-	this->width = width;
-	this->height = height;
+	this->_width = width;
+	this->_height = height;
 	this->_framesAmount = maxFrames;
 	
-	animControl.maxFrames = maxFrames;
+	_animator.maxFrames = maxFrames;
 
 	return true;
 }
@@ -64,10 +64,10 @@ void Entity::Update()
 	_speedX += _accelX * GameTimer::FPSControl.GetSpeedFactor();
 	_speedY += _accelY * GameTimer::FPSControl.GetSpeedFactor();
 
-	if(_speedX > maxSpeedX) _speedX = maxSpeedX;
-	if(_speedX < -maxSpeedX) _speedX = -maxSpeedX;
-	if(_speedY > maxSpeedY) _speedY = maxSpeedY;
-	if(_speedY < -maxSpeedY) _speedY = -maxSpeedY;
+	if(_speedX > _maxSpeedX) _speedX = _maxSpeedX;
+	if(_speedX < -_maxSpeedX) _speedX = -_maxSpeedX;
+	if(_speedY > _maxSpeedY) _speedY = _maxSpeedY;
+	if(_speedY < -_maxSpeedY) _speedY = -_maxSpeedY;
 
 	Animate();
 	OnMove(_speedX, _speedY);
@@ -75,18 +75,18 @@ void Entity::Update()
 
 void Entity::Render(SDL_Surface* surfDisplay)
 {
-	if(surfEntity == NULL || surfDisplay == NULL || state == DEAD) return;
+	if(_entitySprite == NULL || surfDisplay == NULL || state == DEAD) return;
 
-	ExtendedSurface::OnDraw(surfDisplay, surfEntity, x - Camera::Instance.GetX(), y - Camera::Instance.GetY(), 
-		(_currentFrameCol + animControl.GetCurrentFrame())*width, _currentFrameRow*height, width, height);
+	SurfaceWrapper::Draw(surfDisplay, _entitySprite, _x - Camera::Instance.GetX(), _y - Camera::Instance.GetY(), 
+		(_currentFrameCol + _animator.GetCurrentFrame())*_width, _currentFrameRow*_height, _width, _height);
 }
 
 void Entity::Cleanup()
 {
-	if(surfEntity)
-		SDL_FreeSurface(surfEntity);
+	if(_entitySprite)
+		SDL_FreeSurface(_entitySprite);
 
-	surfEntity = NULL;
+	_entitySprite = NULL;
 }
 
 void Entity::Animate()
@@ -97,7 +97,7 @@ void Entity::Animate()
 		_currentFrameRow = 1;
 
 	if(_canJump)
-		animControl.OnAnimate();
+		_animator.OnAnimate();
 }
 
 void Entity::OnEntityCollision(Entity* entity)
@@ -107,15 +107,15 @@ void Entity::OnEntityCollision(Entity* entity)
 
 void Entity::Spawn(float posX, float posY)
 {
-	x = _respawnX = posX;
-	y = _respawnY = posY;
+	_x = _respawnX = posX;
+	_y = _respawnY = posY;
 	state = NO_STATE;
 }
 
 void Entity::Respawn()
 {
-	x = _respawnX;
-	y = _respawnY;
+	_x = _respawnX;
+	_y = _respawnY;
 	state = NO_STATE;
 }
 
@@ -162,14 +162,14 @@ void Entity::OnMove(float moveX, float moveY)
 	while(true)
 	{
 		// move or stop x movement on collision on the x axis
-		if(IsPositionValid((int)(x+newX), (int)(y)))
-			x += newX;
+		if(IsPositionValid((int)(_x+newX), (int)(_y)))
+			_x += newX;
 		else
 			_speedX = 0;
 
 		// move or stop y movement on collision on the y axis
-		if(IsPositionValid((int)(x), (int)(y+newY)))
-			y += newY;
+		if(IsPositionValid((int)(_x), (int)(_y+newY)))
+			_y += newY;
 		else
 		{
 			if(moveY > 0)
@@ -222,13 +222,13 @@ bool Entity::Collides(int otherX, int otherY, int otherWidth, int otherHeight)
 	int myLeft, otherLeft, myRight, otherRight;
 	int myTop, otherTop, myBottom, otherBottom;
 
-	myLeft = (int)x;
+	myLeft = (int)_x;
 	otherLeft = otherX;
-	myRight = myLeft + width - 1;
+	myRight = myLeft + _width - 1;
 	otherRight = otherLeft + otherWidth - 1;
-	myTop = (int)y;
+	myTop = (int)_y;
 	otherTop = otherY;
-	myBottom = myTop + height - 1;
+	myBottom = myTop + _height - 1;
 	otherBottom = otherTop + otherHeight - 1;
 
 
@@ -251,8 +251,8 @@ bool Entity::IsPositionValid(int newX, int newY)
 	// (rounded) range of all tileIds that the entity is over
 	int startX = (int)floor(newX / TILE_SIZE);
 	int startY = (int)floor(newY / TILE_SIZE);
-	int endX = (int)ceil((newX + width - 1) / TILE_SIZE);
-	int endY = (int)ceil((newY + height - 1) / TILE_SIZE);
+	int endX = (int)ceil((newX + _width - 1) / TILE_SIZE);
+	int endY = (int)ceil((newY + _height - 1) / TILE_SIZE);
 
 	// check for collision with map
 	if(GameData::Instance.IsFullMapCollision())
@@ -270,7 +270,7 @@ bool Entity::IsPositionValid(int newX, int newY)
 	else
 	{
 		// check only for map tiles below the entity
-		if(newY > y)
+		if(newY > _y)
 		{
 			for(int iX = startX; iX <= endX; iX++)
 			{
@@ -294,7 +294,7 @@ bool Entity::IsPositionValidTile(Tile* tile)
 {
 	if(tile == NULL) return true; // fall out of world
 
-	if(tile->TypeID == TILE_TYPE_BLOCK) return false;
+	if(tile->TypeID == BLOCK) return false;
 
 	return true;
 }
@@ -302,13 +302,13 @@ bool Entity::IsPositionValidTile(Tile* tile)
 bool Entity::IsPositionValidEntity(Entity* entity, int newX, int newY)
 {
 	if(this != entity && entity != NULL && entity->IsDead() == false &&
-		entity->Collides(newX, newY, width, height) == true)
+		entity->Collides(newX, newY, _width, _height) == true)
 	{
-		EntityCol entityCol;
-		entityCol.entityA = this;
-		entityCol.entityB = entity;
+		EntityCollision entityCol;
+		entityCol.eA = this;
+		entityCol.eB = entity;
 
-		EntityCol::entityColList.push_back(entityCol);
+		EntityCollision::curCollisions.push_back(entityCol);
 		return false;
 	}
 
@@ -319,6 +319,26 @@ bool Entity::Jump()
 {
 	if(_canJump == false) return false;
 
-	_speedY = -maxSpeedY;
+	_speedY = -_maxSpeedY;
 	return true;
+}
+
+float Entity::GetX()
+{
+	return _x;
+}
+
+float Entity::GetY()
+{
+	return _y;
+}
+
+int Entity::GetWidth()
+{
+	return _width;
+}
+
+int Entity::GetHeight()
+{
+	return _height;
 }

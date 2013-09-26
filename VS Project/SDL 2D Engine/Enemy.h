@@ -3,17 +3,16 @@
 
 #include "Entity.h"
 
-enum
+enum WALKDIR
 {
-	WALKDIR_LEFT = 0,
-	WALKDIR_RIGHT
+	DIR_LEFT = 0,
+	DIR_RIGHT
 };
 
 class Enemy : public Entity {
 
-
 private:
-	int _walkDir;
+	WALKDIR _walkDir;
 
 public:
 	Enemy();

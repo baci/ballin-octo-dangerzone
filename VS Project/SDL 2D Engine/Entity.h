@@ -7,14 +7,15 @@
 #include "Area.h"
 #include "SpriteAnimator.h"
 #include "GameTimer.h"
-#include "ExtendedSurface.h"
+#include "SurfaceWrapper.h"
 #include "OneTimeAnimation.h"
 
 class CApp;
+class Camera;
 
 enum ENTITY_TYPE
 {
-	GENERIC = 0,
+	COMMON = 0,
 	PLAYER
 };
 
@@ -23,44 +24,41 @@ enum ENTITY_STATE
 	NO_STATE = 0,
 	MOVE_LEFT,
 	MOVE_RIGHT,
-	DIE,
 	DEAD
 };
-
-class Camera;
 
 /**
 	An entity which can be moved / animated. (everything besides solid map objects)
 */
 class Entity {
 public:
-	static std::vector<Entity*>	currentEntities; // list of all existing entities
-
-	// entity bounds (pos. in world)
-	float	x;
-	float	y;
-	int		width;
-	int		height;
+	// list of all existing entities
+	static std::vector<Entity*>	currentEntities; 
 
 	// entity properties
 	ENTITY_STATE	state;
-	ENTITY_TYPE		type;
-
-	// movement max. values (pixel per seconds)
-	float	maxSpeedX;
-	float	maxSpeedY;
 
 	OneTimeAnimation *deathAnimation;
 
 protected:
-	SpriteAnimator	animControl;
-	SDL_Surface*	surfEntity;
+	SpriteAnimator	_animator;
+	SDL_Surface*	_entitySprite;
+
+	ENTITY_TYPE		_type;
+
+	// entity world position / bounds
+	float	_x;
+	float	_y;
+	int		_width;
+	int		_height;
 
 	// current movement properties (pixel per second)
 	float	_speedX;
 	float	_speedY;
 	float	_accelX;
 	float	_accelY;
+	float	_maxSpeedX;
+	float	_maxSpeedY;
 
 	// sprite animation state
 	int		_currentFrameCol;
@@ -76,10 +74,9 @@ protected:
 public:
 	Entity();
 
-	/**
-	loading the entity spritefile and setting pink as transparent color
-	TODO: do with/without transparent color or let it be specified
-	*/
+	static void RespawnAll();
+
+	//loading the entity spritefile and setting pink as transparent color
 	virtual bool Load(char* file, int width, int height, int maxFrames);
 
 	virtual void Update();
@@ -90,26 +87,24 @@ public:
 	virtual void OnEntityCollision(Entity* entity);
 	virtual void Die();
 
+	// move in a certain direction in pixel/seconds with acceleration.
+	void OnMove(float moveX, float moveY);
+	// inverts acceleration until entity stops.
+	void StopMove();
 	void Spawn(float posX, float posY);
 	void Respawn();
-
-	static void RespawnAll();
+	// checks collision with specified rectangle based on entity bounds as rectangle
+	bool Collides(int oX, int oY, int oW, int oH);
+	// executes a single jump
+	bool Jump();
 
 	bool IsDead(){return state == DEAD;}
-	bool IsPlayer(){return type == PLAYER;}
+	bool IsPlayer(){return _type == PLAYER;}
 
-	/*
-	move in a certain direction in pixel/seconds with acceleration.
-	*/
-	void OnMove(float moveX, float moveY);
-	/*
-	inverts acceleration until entity stops.
-	*/
-	void StopMove();
-
-	bool Collides(int oX, int oY, int oW, int oH);
-
-	bool Jump();
+	float GetX();
+	float GetY();
+	int GetWidth();
+	int GetHeight();
 
 protected:
 	/**
@@ -123,16 +118,15 @@ protected:
 /**
 	collision event between two entities.
 */
-class EntityCol {
+class EntityCollision {
 public: 
 	// queue-like list of entity collisions occurred.
-	static std::vector<EntityCol> entityColList;
+	static std::vector<EntityCollision> curCollisions;
 
-	Entity* entityA;
-	Entity* entityB;
+	EntityCollision();
 
-public:
-	EntityCol();
+	Entity* eA;
+	Entity* eB;
 };
 
 #endif

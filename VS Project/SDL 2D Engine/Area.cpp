@@ -6,22 +6,21 @@ Area Area::Instance;
 
 Area::Area()
 {
-	//Instance = this;
-	areaSizeX = 0;
-	areaSizeY = 0;
-	surfTileset = NULL;
-	areaBackground = NULL;
+	_areaSizeX = 0;
+	_areaSizeY = 0;
+	_tileset = NULL;
+	_areaBackground = NULL;
 }
 
 /*
 parsing the map data from the specified file.
 return true on success
 */
-bool Area::OnLoad(char* file)
+bool Area::Load(char* file)
 {
 	char ignoreComment[1000];
 
-	tileList.clear();
+	_tileList.clear();
 
 	FILE* fileHandle = NULL;
 	fopen_s(&fileHandle, file, "r");
@@ -32,28 +31,28 @@ bool Area::OnLoad(char* file)
 	char tilesetFile[1000];
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fscanf_s(fileHandle, "%s\n", tilesetFile);
-	if((surfTileset = ExtendedSurface::OnLoad(tilesetFile)) == false)
+	if((_tileset = SurfaceWrapper::Load(tilesetFile)) == false)
 	{
 		fclose(fileHandle);
 		return false;
 	}
-	ExtendedSurface::Transparent(surfTileset, 255, 255, 255, false);
+	SurfaceWrapper::SetTransparency(_tileset, 255, 255, 255, false);
 
 	// load area size
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
-	fscanf_s(fileHandle, "%d:%d\n", &areaSizeX, &areaSizeY);
+	fscanf_s(fileHandle, "%d:%d\n", &_areaSizeX, &_areaSizeY);
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	// parse the tiles
-	for(int y=0; y < areaSizeY; y++)
+	for(int y=0; y < _areaSizeY; y++)
 	{
-		for(int x=0; x < areaSizeX; x++)
+		for(int x=0; x < _areaSizeX; x++)
 		{
 			Tile tempTile;
 			fscanf_s(fileHandle, "%d:%d ", &tempTile.TileID, &tempTile.TypeID);
-			tileList.push_back(tempTile);
+			_tileList.push_back(tempTile);
 		}
 		fscanf_s(fileHandle, "\n");
 	}
@@ -62,7 +61,7 @@ bool Area::OnLoad(char* file)
 	char backgroundFile[1000];
 	fgets(ignoreComment, sizeof ignoreComment, fileHandle); // comment
 	fscanf_s(fileHandle, "%s\n", backgroundFile);
-	if((areaBackground = ExtendedSurface::OnLoad(backgroundFile)) == NULL)
+	if((_areaBackground = SurfaceWrapper::Load(backgroundFile)) == NULL)
 		return false;
 
 	// initialize player
@@ -118,23 +117,23 @@ bool Area::OnLoad(char* file)
 	return true;
 }
 
-void Area::OnRender(SDL_Surface* surfDisplay, int cameraX, int cameraY)
+void Area::Render(SDL_Surface* surfDisplay, int cameraX, int cameraY)
 {
 	// draw the background
-	ExtendedSurface::OnDraw(surfDisplay, areaBackground, 0, 0, 0, 0, WWIDTH, WHEIGHT);
+	SurfaceWrapper::Draw(surfDisplay, _areaBackground, 0, 0, 0, 0, WWIDTH, WHEIGHT);
 	
 	// render the tiles of the map
-	if(surfTileset == NULL) return;
+	if(_tileset == NULL) return;
 
-	int tilesetWidth = surfTileset->w / TILE_SIZE;
-	int tilesetHeight = surfTileset->h / TILE_SIZE;
+	int tilesetWidth = _tileset->w / TILE_SIZE;
+	int tilesetHeight = _tileset->h / TILE_SIZE;
 	int id = 0;
 
-	for(int y=0; y < areaSizeY; y++)
+	for(int y=0; y < _areaSizeY; y++)
 	{
-		for(int x=0; x < areaSizeX; x++)
+		for(int x=0; x < _areaSizeX; x++)
 		{
-			if(tileList[id].TypeID == TILE_TYPE_NONE)
+			if(_tileList[id].TypeID == NONE)
 			{
 				id++;
 				continue;
@@ -143,24 +142,24 @@ void Area::OnRender(SDL_Surface* surfDisplay, int cameraX, int cameraY)
 			int tX = cameraX + (x * TILE_SIZE);
 			int tY = cameraY + (y * TILE_SIZE);
 
-			int tilesetX = (tileList[id].TileID % tilesetWidth) * TILE_SIZE;
-			int tilesetY = (tileList[id].TileID % tilesetWidth) / TILE_SIZE;
+			int tilesetX = (_tileList[id].TileID % tilesetWidth) * TILE_SIZE;
+			int tilesetY = (_tileList[id].TileID % tilesetWidth) / TILE_SIZE;
 
-			ExtendedSurface::OnDraw(surfDisplay, surfTileset, tX, tY, tilesetX, tilesetY, TILE_SIZE, TILE_SIZE);
+			SurfaceWrapper::Draw(surfDisplay, _tileset, tX, tY, tilesetX, tilesetY, TILE_SIZE, TILE_SIZE);
 
 			id++;
 		}
 	}
 }
 
-void Area::OnCleanup()
+void Area::Cleanup()
 {
-	if(surfTileset)
-		SDL_FreeSurface(surfTileset);
+	if(_tileset)
+		SDL_FreeSurface(_tileset);
 
-	tileList.clear();
+	_tileList.clear();
 
-	SDL_FreeSurface(areaBackground);
+	SDL_FreeSurface(_areaBackground);
 }
 
 Tile* Area::GetTile(int x, int y)
@@ -168,13 +167,23 @@ Tile* Area::GetTile(int x, int y)
 	int tileX = x / TILE_SIZE;
 	int tileY = y / TILE_SIZE;
 
-	if(tileX >= areaSizeX || tileX < 0 || tileY >= areaSizeY || tileY < 0)
+	if(tileX >= _areaSizeX || tileX < 0 || tileY >= _areaSizeY || tileY < 0)
 		return NULL;
 	
-	uint16_t ID = tileX + (areaSizeX * tileY);
+	uint16_t ID = tileX + (_areaSizeX * tileY);
 
-	if(ID < 0 || ID >= tileList.size()) 
+	if(ID < 0 || ID >= _tileList.size()) 
 		return NULL;
 
-	return &tileList[ID];
+	return &_tileList[ID];
+}
+
+int Area::GetAreaSizeX()
+{
+	return _areaSizeX;
+}
+
+int Area::GetAreaSizeY()
+{
+	return _areaSizeY;
 }

@@ -2,7 +2,7 @@
 
 void MainGame::Update()
 {
-	GameTimer::FPSControl.OnLoop();
+	GameTimer::FPSControl.Update();
 	
 	// handle entities
 	for(uint16_t i=0; i<Entity::currentEntities.size(); i++)
@@ -17,17 +17,17 @@ void MainGame::Update()
 	}
 
 	// handle entity collision events
-	for(uint16_t i=0; i<EntityCol::entityColList.size(); i++)
+	for(uint16_t i=0; i<EntityCollision::curCollisions.size(); i++)
 	{
-		Entity* entityA = EntityCol::entityColList[i].entityA;
-		Entity* entityB = EntityCol::entityColList[i].entityB;
+		Entity* eA = EntityCollision::curCollisions[i].eA;
+		Entity* eB = EntityCollision::curCollisions[i].eB;
 
-		if(entityA == NULL || entityB == NULL) continue;
+		if(eA == NULL || eB == NULL) continue;
 
-		entityA->OnEntityCollision(entityB);
-		entityB->OnEntityCollision(entityA);
+		eA->OnEntityCollision(eB);
+		eB->OnEntityCollision(eA);
 	}
-	EntityCol::entityColList.clear();
+	EntityCollision::curCollisions.clear();
 
 	// handle camera
 	Camera::Instance.Update();

@@ -6,7 +6,7 @@ SpriteAnimator::SpriteAnimator()
 	maxFrames = 0;
 	_frameInc = 1;
 
-	_frameRate = 200; 
+	_delayMs = 200; 
 	_oldTime = 0;
 
 	oscillate = false;
@@ -16,10 +16,10 @@ void SpriteAnimator::OnAnimate()
 {
 	
 	// check if frame time passed
-	if(_oldTime + _frameRate > SDL_GetTicks())
+	if(_oldTime + _delayMs > SDL_GetTicks())
 		return;
 
-	unsigned long frameCounter = (SDL_GetTicks() - _oldTime)/_frameRate;
+	unsigned long frameCounter = (SDL_GetTicks() - _oldTime)/_delayMs;
 
 	_oldTime = SDL_GetTicks();
 
@@ -49,9 +49,9 @@ void SpriteAnimator::OnAnimate()
 	}
 }
 
-void SpriteAnimator::SetFrameRate(int rate)
+void SpriteAnimator::SetDelay(int delay)
 {
-	_frameRate = rate;
+	_delayMs = delay;
 }
 
 void SpriteAnimator::SetCurrentFrame(int frame)

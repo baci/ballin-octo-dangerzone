@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-	type = PLAYER;
+	_type = PLAYER;
 }
 
 bool Player::Load(char* file, int width, int height, int maxFrames)
@@ -19,14 +19,14 @@ void Player::Die()
 	Entity::Die();
 
 	// clear pending collisions and respawn after animation
-	EntityCol::entityColList.clear();
+	EntityCollision::curCollisions.clear();
 }
 
 void Player::Update()
 {
 	Entity::Update();
 
-	if(y/TILE_SIZE > Area::Instance.areaSizeY)
+	if(_y/TILE_SIZE > Area::Instance.GetAreaSizeY())
 	{
 		Die();
 		Entity::RespawnAll();
@@ -36,9 +36,9 @@ void Player::Update()
 void Player::Animate()
 {
 	if(_speedX != 0) {
-        animControl.maxFrames = _framesAmount;
+        _animator.maxFrames = _framesAmount;
     }else{
-        animControl.maxFrames = 0;
+        _animator.maxFrames = 0;
     }
  
     Entity::Animate();
@@ -46,11 +46,11 @@ void Player::Animate()
  
 void Player::OnEntityCollision(Entity* entity) 
 {
-	if(entity->y <= y + height)
+	if(entity->GetY() <= _y + _height*0.8)
 	{
  		Die();
 
-		deathAnimation->Play(&Entity::RespawnAll, (int)x, (int)y, width, height);
+		deathAnimation->Play(&Entity::RespawnAll, (int)_x, (int)_y, _width, _height);
 	}
 	else
 	  	Jump();

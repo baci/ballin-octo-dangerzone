@@ -13,7 +13,7 @@
 #include <string>
 #include "SpriteAnimator.h"
 #include "Camera.h"
-#include "ExtendedSurface.h"
+#include "SurfaceWrapper.h"
 
 using namespace std;
 

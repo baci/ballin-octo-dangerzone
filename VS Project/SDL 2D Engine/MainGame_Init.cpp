@@ -1,5 +1,5 @@
 #include "MainGame.h"
-#include "ExtendedSurface.h"
+#include "SurfaceWrapper.h"
 
 bool MainGame::Init()
 {
@@ -40,7 +40,7 @@ bool MainGame::Init()
 	if(GameData::Instance.OnLoad("./maps/main.game") == false)
 		return false;
 
-	if(Area::Instance.OnLoad("./maps/1.area") == false)
+	if(Area::Instance.Load("./maps/1.area") == false)
 		return false;
 
 	SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);

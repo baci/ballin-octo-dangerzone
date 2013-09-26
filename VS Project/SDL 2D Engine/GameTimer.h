@@ -13,17 +13,18 @@ public:
 
 private:
 	// vars to calculate FPS / speed factor
-	int oldTime;
-	int lastTime;
+	int _oldTime;
+	int _lastTime;
 
-	float speedFactor; // relative game speed. play around with to get slowmo / highspeed effects.
+	// relative game speed. play around with to get slowmo / highspeed effects.
+	float _speedFactor; 
 
-	int numFrames; // game's current FPS
-	int frames;
+	int _numFrames; // game's current FPS
+	int _frames;
 
 public:
 	GameTimer();
-	void OnLoop();
+	void Update();
 	int GetFPS();
 	float GetSpeedFactor();
 };

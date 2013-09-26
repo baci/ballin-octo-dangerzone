@@ -1,10 +1,10 @@
 #include "MainGame.h"
-#include "ExtendedSurface.h"
+#include "SurfaceWrapper.h"
 
 void MainGame::Render()
 {
     // render area
-	Area::Instance.OnRender(_surfDisplay, -Camera::Instance.GetX(), -Camera::Instance.GetY());
+	Area::Instance.Render(_surfDisplay, -Camera::Instance.GetX(), -Camera::Instance.GetY());
 	
 	// render entities
 	for(uint16_t i=0; i<Entity::currentEntities.size(); i++)
@@ -26,7 +26,7 @@ void MainGame::Render()
 		s += "FPS";
 		char const *pchar = s.c_str();
 		_debugMessage = TTF_RenderText_Solid(_debugFont, pchar, _textColor);
-		ExtendedSurface::OnDraw(_surfDisplay, _debugMessage, 5, 5, 0, 0, 100, 100);
+		SurfaceWrapper::Draw(_surfDisplay, _debugMessage, 5, 5, 0, 0, 100, 100);
 	}
 
     SDL_Flip(_surfDisplay);

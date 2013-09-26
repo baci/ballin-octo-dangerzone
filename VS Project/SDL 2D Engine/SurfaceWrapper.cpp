@@ -1,10 +1,10 @@
-#include "ExtendedSurface.h"
+#include "SurfaceWrapper.h"
 
-ExtendedSurface::ExtendedSurface()
+SurfaceWrapper::SurfaceWrapper()
 {
 }
 
-SDL_Surface* ExtendedSurface::OnLoad(char* file)
+SDL_Surface* SurfaceWrapper::Load(char* file)
 {
     SDL_Surface* surfTmp = NULL;
     SDL_Surface* surfRet = NULL;
@@ -18,7 +18,7 @@ SDL_Surface* ExtendedSurface::OnLoad(char* file)
     return surfRet;
 }
 
-bool ExtendedSurface::OnDraw(SDL_Surface* surfDest, SDL_Surface* surfSrc, int x, int y)
+bool SurfaceWrapper::Draw(SDL_Surface* surfDest, SDL_Surface* surfSrc, int x, int y)
 {
     if(surfDest==NULL || surfSrc==NULL)
         return false;
@@ -32,7 +32,7 @@ bool ExtendedSurface::OnDraw(SDL_Surface* surfDest, SDL_Surface* surfSrc, int x,
     return true;
 }
 
-bool ExtendedSurface::OnDraw(SDL_Surface* surfDest, SDL_Surface* surfSrc, int x, int y, int x2, int y2, int w, int h)
+bool SurfaceWrapper::Draw(SDL_Surface* surfDest, SDL_Surface* surfSrc, int x, int y, int x2, int y2, int w, int h)
 {
     if(surfDest==NULL || surfSrc==NULL)
         return false;
@@ -52,7 +52,7 @@ bool ExtendedSurface::OnDraw(SDL_Surface* surfDest, SDL_Surface* surfSrc, int x,
     return true;
 }
 
-bool ExtendedSurface::Transparent(SDL_Surface* Surf_Dest, int R, int G, int B, bool alpha) {
+bool SurfaceWrapper::SetTransparency(SDL_Surface* Surf_Dest, int R, int G, int B, bool alpha) {
     if(Surf_Dest == NULL) {
         return false;
     }

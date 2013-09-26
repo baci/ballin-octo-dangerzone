@@ -11,7 +11,7 @@ void MainGame::Cleanup()
 	}
 	Entity::currentEntities.clear();
 
-	Area::Instance.OnCleanup();
+	Area::Instance.Cleanup();
 
 	GameData::Instance.OnCleanup();
 
