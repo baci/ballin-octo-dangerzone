@@ -14,4 +14,5 @@ It features editable map files, varibly placeable entities, configurable camera 
 
 * Clone repository
 * Compile VS solution
-* Create and edit .game files (containing the game configuration) and .area files (containing the navigable area) using a simple text editor like Notepad++. The provided example files in Debug/maps contain additional documentation.
+* There are some example graphics and levels. Create and edit .game files (containing the game configuration) and .area files (containing the navigable level area) using a simple text editor like Notepad++. The provided example files in Debug/maps contain additional documentation.
+* Run "SDL 2D Engine.exe" to play the level.
